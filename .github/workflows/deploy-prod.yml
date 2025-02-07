@@ -6,7 +6,22 @@ on:
       - main
 
 jobs:
+  set:
+    runs-on: ubuntu-latest
+    outputs:
+        TIMESTAMP: ${{ steps.set_timestamp.outputs.TIMESTAMP }}
+        IMAGE_NAME: ${{ steps.set_docker_image_name.outputs.IMAGE_NAME }}
+
+    steps:
+      - name: 🕒 Set Timestamp
+        id: set_timestamp
+        run: echo "TIMESTAMP=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+      - name: 🔄️ Set Docker Image Name
+        id: set_docker_image_name
+        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_OUTPUT
+
   build:
+    needs: set
     environment: Deploy-Prod
     runs-on: ubuntu-latest
 
@@ -39,8 +54,10 @@ jobs:
     environment: Deploy-Prod
 
     steps:
-      - name: 🕒 Set Timestamp
-        run: echo "TIMESTAMP=$(date +'%Y%m%d-%H%M%S')"
+      - name: 📥 Load Outputs
+        run: |
+          echo "IMAGE_NAME=${{ needs.set.outputs.IMAGE_NAME }}"
+          echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
       - name: 📂 Checkout Repository
         uses: actions/checkout@v3
       - name: 📦 Download Artifact
@@ -50,12 +67,9 @@ jobs:
       - name: 🐋 Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: 📦 Build Docker Image
-        run: |
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
-          docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${TIMESTAMP} .
+        run: docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${TIMESTAMP} .
       - name: 🚀 Push Docker Image
         run: |
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
           docker push ${IMAGE_NAME}:latest
           docker push ${IMAGE_NAME}:${TIMESTAMP}
 
@@ -65,6 +79,10 @@ jobs:
     environment: Deploy-Prod
 
     steps:
+      - name: 📥 Load Outputs
+        run: |
+          echo "IMAGE_NAME=${{ needs.set.outputs.IMAGE_NAME }}"
+          echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
       - name: 🔑 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -100,6 +118,10 @@ jobs:
     environment: Deploy-Prod
 
     steps:
+      - name: 📥 Load Outputs
+        run: |
+          echo "IMAGE_NAME=${{ needs.set.outputs.IMAGE_NAME }}"
+          echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -112,7 +134,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
               set -e
               CONTAINER_NAME=groom-server
-              IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
           
               echo "🩺 Checking Application Health..."
               RESPONSE=\$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
