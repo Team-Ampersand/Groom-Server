@@ -1,0 +1,26 @@
+= Groom
+
+GSM Room Booking System
+
+== Commit Message Rule
+
+
+|===
+|Type |Meaning
+
+|add | 새로운 코드나 파일을 추가했을 때
+|update | 기존의 코드를 수정했을 때
+|fix | 버그를 수정했을 때
+|delete | 삭제한 사항이 있을 때
+|chore | 그 외 자잘한 작업을 했을 때
+|docs | 문서를 수정했을 때
+|test | 테스트 관련 사항을 수정했을 때
+|init | 프로젝트를 초기화했을 때
+|===
+
+=== Example
+```bash
+docs:: README 작성
+
+README.adoc 파일을 작성했습니다
+```
