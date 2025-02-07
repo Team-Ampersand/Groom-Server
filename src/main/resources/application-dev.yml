@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:groom}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
