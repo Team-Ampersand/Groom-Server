@@ -30,7 +30,7 @@ jobs:
       - name: 🪂 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          path: build/libs/*.jar
+          path: build/libs/groom-0.0.1-SNAPSHOT.jar
           retention-days: 1
 
   push:
