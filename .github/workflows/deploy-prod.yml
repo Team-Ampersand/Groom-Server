@@ -49,13 +49,13 @@ jobs:
           path: build/libs/
       - name: 🐋 Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: 🔄️ Set Docker Image Name
-        run: IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
       - name: 📦 Build Docker Image
         run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
           docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${TIMESTAMP} .
       - name: 🚀 Push Docker Image
         run: |
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
           docker push ${IMAGE_NAME}:latest
           docker push ${IMAGE_NAME}:${TIMESTAMP}
 
