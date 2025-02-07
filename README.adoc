@@ -20,7 +20,7 @@ GSM Room Booking System
 
 === Example
 ```bash
-docs:: README 작성
+docs: README 작성
 
 README.adoc 파일을 작성했습니다
 ```
