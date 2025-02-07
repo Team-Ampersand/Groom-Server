@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-env:
-  IMAGE_NAME: "${{ secrets.DOCKER_USERNAME }}/groom-server"
-
 jobs:
   build:
     environment: Deploy-Prod
@@ -52,6 +49,8 @@ jobs:
           path: build/libs/
       - name: 🐋 Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: 🔄️ Set Docker Image Name
+        run: IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
       - name: 📦 Build Docker Image
         run: |
           docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${TIMESTAMP} .
@@ -77,7 +76,7 @@ jobs:
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
           CONTAINER_NAME=groom-server
-          
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
           echo "🛑 Stop and Remove Existing Container"
           docker stop $CONTAINER_NAME || true
           docker rm $CONTAINER_NAME || true
@@ -113,6 +112,7 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
               set -e
               CONTAINER_NAME=groom-server
+              IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
           
               echo "🩺 Checking Application Health..."
               RESPONSE=\$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
