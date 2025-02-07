@@ -30,7 +30,7 @@ jobs:
         shell: bash
       - name: 🔨 Build Gradle
         run: ./gradlew build --no-daemon
-      - name: ?? Upload Artifact
+      - name: 🪂 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           path: build/libs/*.jar
