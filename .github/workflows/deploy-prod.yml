@@ -61,7 +61,7 @@ jobs:
       - name: 📦 Download Artifact
         uses: actions/download-artifact@v4
         with:
-          path: .
+          path: /build/libs
       - name: 🐋 Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: 📦 Build Docker Image
@@ -178,7 +178,7 @@ jobs:
           ROLLBACK_STATUS=$(echo "$RESULT" | grep "DEPLOYMENT_STATUS=" | cut -d '=' -f2)
           echo "rollback_status=$ROLLBACK_STATUS" >> $GITHUB_OUTPUT
         continue-on-error: true
-      
+
       - name: 📢 Post Warning in Summary (Rollback Success)
         if: steps.health_check.outputs.rollback_status == 'rollback_success'
         run: echo "⚠️ Deployment failed, but rollback was successfully executed. Please verify the system." >> $GITHUB_STEP_SUMMARY
