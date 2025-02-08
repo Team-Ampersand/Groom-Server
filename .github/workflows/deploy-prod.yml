@@ -114,10 +114,6 @@ jobs:
     environment: Deploy-Prod
 
     steps:
-      - name: 📥 Load Outputs
-        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}" >> $GITHUB_ENV
-      - name: 🏷️ Set Docker Image Name
-        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -127,44 +123,44 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: 🫀 Check Application Health & Rollback if needed
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-              set -e
-              CONTAINER_NAME=groom-server
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            set -e
+            CONTAINER_NAME=groom-server
+            IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
+            TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}
+      
+            echo "🩺 Checking Application Health..."
+            RESPONSE=\$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
+      
+            if [ "\$RESPONSE" = "OK" ]; then
+              echo "✅ Deployment Successful!"
+              exit 0
+            else
+              echo "❌ Deployment Failed! Rolling back..."
           
-              echo "🩺 Checking Application Health..."
-              RESPONSE=\$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
+              docker stop \$CONTAINER_NAME || true
+              docker rm \$CONTAINER_NAME || true
           
-              if [ "\$RESPONSE" = "OK" ]; then
-                  echo "✅ Deployment Successful!"
-                  exit 0
-              else
-                  echo "❌ Deployment Failed! Rolling back..."
+              PREVIOUS_IMAGE=\$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "\$IMAGE_NAME" | grep -v "latest" | sort -r | sed -n '2p')
           
-                  docker stop \$CONTAINER_NAME || true
-                  docker rm \$CONTAINER_NAME || true
-          
-                  PREVIOUS_IMAGE=\$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "$IMAGE_NAME" | grep -v "latest" | sort -r | sed -n '2p')
-          
-                  if [ -z "\$PREVIOUS_IMAGE" ]; then
-                      echo "⚠️ No previous image found! Manual rollback required."
-                      echo "::warning::⚠️ Deployment failed, and no previous image found. Manual rollback required!"
-                      exit 1
-                  fi
-          
-                  echo "🔄 Rolling back to previous image: \$PREVIOUS_IMAGE"
-                  docker run -d --name \$CONTAINER_NAME -p 8080:8080 \
-                    -e TZ=Asia/Seoul \
-                    -e SPRING_PROFILES_ACTIVE=prod \
-                    \$PREVIOUS_IMAGE
-          
-                  echo "✅ Rollback completed!"
-                  echo "::warning::⚠ Deployment failed, rollback was executed. Please check the logs for details!"
-          
-                  exit 1
+              if [ -z "\$PREVIOUS_IMAGE" ]; then
+                echo "⚠️ No previous image found! Manual rollback required."
+                echo "::warning::⚠️ Deployment failed, and no previous image found. Manual rollback required!"
+                exit 1
               fi
+          
+              echo "🔄 Rolling back to previous image: \$PREVIOUS_IMAGE"
+              docker run -d --name \$CONTAINER_NAME -p 8080:8080 \
+                -e TZ=Asia/Seoul \
+                -e SPRING_PROFILES_ACTIVE=prod \
+                \$PREVIOUS_IMAGE
+          
+              echo "✅ Rollback completed!"
+              echo "::warning::⚠️ Deployment failed, rollback was executed. Please check the logs for details!"
+          
+              exit 1
+            fi
           EOF
-
       - name: 📢 Post Warning in Summary
         if: failure()
-        run: |
-          echo "⚠️ **Deployment failed, rollback was executed. Please check the logs for details!**" >> $GITHUB_STEP_SUMMARY
+        run: echo "⚠️ **Deployment failed, rollback was executed. Please check the logs for details!**" >> $GITHUB_STEP_SUMMARY
