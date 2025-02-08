@@ -187,7 +187,7 @@ jobs:
               {
                 "title": "🚀 성공적으로 배포 되었습니다!",
                 "description": "🎉 프로덕션 서버에 성공적으로 배포되었습니다.",
-                "color": 3066993
+                "color": 3066993,
                 "fields": [
                   {
                     "name": "🔗 배포 서버 Health Check",
@@ -210,7 +210,7 @@ jobs:
               {
                 "title": "🔄 롤백이 성공적으로 실행되었습니다!",
                 "description": "❌ 배포가 실패하여 이전 이미지로 롤백되었습니다.",
-                "color": 15158332
+                "color": 15158332,
                 "fields": [
               {
                 "name": "🔗 복구된 서버 Health Check",
