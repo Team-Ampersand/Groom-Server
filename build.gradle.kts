@@ -47,6 +47,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	runtimeOnly("com.mysql:mysql-connector-j:9.2.0")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.5.1")
+	runtimeOnly("com.h2database:h2:2.3.232")
 
 	/** QueryDSL */
 	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
