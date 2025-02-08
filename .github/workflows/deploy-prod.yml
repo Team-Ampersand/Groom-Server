@@ -61,7 +61,7 @@ jobs:
       - name: 📦 Download Artifact
         uses: actions/download-artifact@v4
         with:
-          path: /build/libs
+          path: build/libs
       - name: 🐋 Docker Login
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: 📦 Build Docker Image
