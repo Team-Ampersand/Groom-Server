@@ -89,18 +89,20 @@ jobs:
           ssh-agent bash -c "ssh-add ~/.ssh/id_rsa"
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: 🚀 Deploy to Production
-        run: | 
+        run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
             echo "🛑 Stop and Remove Existing Container"
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
-            
+          
             echo "📥 Pull Latest Image"
             docker pull ${IMAGE_NAME}:latest
-            
+          
             echo "🚀 Run New Container"
             docker run -d --name $CONTAINER_NAME -p 8080:8080 ${IMAGE_NAME}:latest
+            echo "🧹 Cleaning up old images"
+            docker system prune -af
             exit 0
           EOF
       - name: ⌛ Wait for Application to Start
@@ -113,17 +115,13 @@ jobs:
       - set
     runs-on: ubuntu-latest
     environment: Deploy-Prod
-
     steps:
       - name: 🏷️ Set Docker Image Name
         run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
-
       - name: 🎁 Set Docker Container Name
         run: echo "CONTAINER_NAME=groom-server" >> $GITHUB_ENV
-
       - name: 📥 Load Outputs
         run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}" >> $GITHUB_ENV
-
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -131,7 +129,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-agent bash -c "ssh-add ~/.ssh/id_rsa"
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
       - name: 🫀 Check Application Health & Rollback if needed
         id: health_check
         run: |
@@ -139,7 +136,7 @@ jobs:
             set -e
 
             echo "🩺 Checking Application Health..."
-            RESPONSE=\$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
+            RESPONSE=\$(curl -s "https://${{ secrets.PROD_SERVER_URL }}/")
 
             if [ "\$RESPONSE" = "OK" ]; then
               echo "DEPLOYMENT_STATUS=successful"
@@ -173,15 +170,29 @@ jobs:
             fi
           EOF
           )
-    
+          
           echo "$RESULT"
           ROLLBACK_STATUS=$(echo "$RESULT" | grep "DEPLOYMENT_STATUS=" | cut -d '=' -f2)
           echo "rollback_status=$ROLLBACK_STATUS" >> $GITHUB_OUTPUT
         continue-on-error: true
-
-      - name: 📢 Post Warning in Summary (Rollback Success)
+      - name: 🎉 Discord Notification - Successful Deployment
+        if: steps.health_check.outputs.rollback_status == 'successful'
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "✅ 서버 배포가 성공적으로 완료되었습니다!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: 📢 Discord Notification - Rollback Executed
         if: steps.health_check.outputs.rollback_status == 'rollback_success'
-        run: echo "⚠️ Deployment failed, but rollback was successfully executed. Please verify the system." >> $GITHUB_STEP_SUMMARY
-      - name: 📢 Post Warning in Summary (Rollback Failed)
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "⚠️ 배포가 실패하여 롤백되었습니다. 이전 이미지로 롤백되었습니다."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: 📢 Discord Notification - Rollback Failed
         if: steps.health_check.outputs.rollback_status == 'rollback_failure' || steps.health_check.outputs.rollback_status == 'rollback_failed_no_previous'
-        run: echo "⚠️ Deployment failed and rollback was not successful. Manual intervention is required!" >> $GITHUB_STEP_SUMMARY
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{"content": "🚨 배포가 실패하여 롤백을 시도했지만 실패했습니다."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
