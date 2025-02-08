@@ -77,6 +77,10 @@ jobs:
     environment: Deploy-Prod
 
     steps:
+      - name: 🏷️ Set Docker Image Name
+        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
+      - name: 🎁 Set Docker Container Name
+        run: echo "CONTAINER_NAME=groom-server" >> $GITHUB_ENV
       - name: 🔑 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -88,8 +92,6 @@ jobs:
         run: | 
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
             set -e
-            CONTAINER_NAME=groom-server
-            IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
             echo "🛑 Stop and Remove Existing Container"
             docker stop $CONTAINER_NAME || true
             docker rm $CONTAINER_NAME || true
@@ -116,6 +118,12 @@ jobs:
     environment: Deploy-Prod
 
     steps:
+      - name: 🏷️ Set Docker Image Name
+        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
+      - name: 🎁 Set Docker Container Name
+        run: echo "CONTAINER_NAME=groom-server" >> $GITHUB_ENV
+      - name: 📥 Load Outputs
+        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}" >> $GITHUB_ENV
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -128,9 +136,6 @@ jobs:
         run: |
           RESULT=$(ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
-            CONTAINER_NAME=groom-server
-            IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
-            TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}
 
             echo "🩺 Checking Application Health..."
             RESPONSE=$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
