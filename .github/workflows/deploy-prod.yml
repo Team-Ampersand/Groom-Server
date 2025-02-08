@@ -36,6 +36,8 @@ jobs:
           touch ./src/main/resources/application-prod.yml
           echo "${{ secrets.APPLICATION_PROD_YML }}" > ./src/main/resources/application-prod.yml
         shell: bash
+      - name: Debug yml
+        run: cat ./src/main/resources/application-prod.yml
       - name: 🔨 Build Gradle
         run: ./gradlew build --no-daemon
       - name: 🪂 Upload Artifact
