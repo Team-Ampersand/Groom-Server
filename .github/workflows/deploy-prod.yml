@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: 📥 Load Outputs
-        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
+        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}" >> $GITHUB_ENV
       - name: 🏷️ Set Docker Image Name
         run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
       - name: 📂 Checkout Repository
@@ -113,7 +113,7 @@ jobs:
 
     steps:
       - name: 📥 Load Outputs
-        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
+        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}" >> $GITHUB_ENV
       - name: 🏷️ Set Docker Image Name
         run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
       - name: 🔐 Setup SSH
@@ -144,8 +144,8 @@ jobs:
                   PREVIOUS_IMAGE=\$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "$IMAGE_NAME" | grep -v "latest" | sort -r | sed -n '2p')
           
                   if [ -z "\$PREVIOUS_IMAGE" ]; then
-                      echo "⚠ No previous image found! Manual rollback required."
-                      echo "::warning::⚠ Deployment failed, and no previous image found. Manual rollback required!"
+                      echo "⚠️ No previous image found! Manual rollback required."
+                      echo "::warning::⚠️ Deployment failed, and no previous image found. Manual rollback required!"
                       exit 1
                   fi
           
