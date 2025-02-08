@@ -24,3 +24,16 @@ docs: README 작성
 
 README.adoc 파일을 작성했습니다
 ```
+
+=== Branch Rule
+
+기본적으로 ``Git Flow``를 따르며, ``main``,`develop`,`feature`,`hotfix` 브랜치를 사용합니다.
+
+|===
+|Branch |Meaning | Merge Branch
+
+|main | 배포 가능한 상태로 유지하는 브랜치 | [가장 최신 버전]
+|develop | 다음 버전을 개발하는 브랜치 | main
+|feature | 기능을 개발하는 브랜치 | develop
+|hotfix | 배포 버전에서 발생한 버그를 수정하는 브랜치 | main
+
