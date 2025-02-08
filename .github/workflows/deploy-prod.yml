@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '21'
-          distribution: 'adopt'
+          distribution: 'temurin'
       - name: 🎖️ Grant Execute Permission
         run: chmod +x gradlew
       - name: ⚙️ Create application-prod.yml
@@ -100,10 +100,7 @@ jobs:
             docker pull ${IMAGE_NAME}:latest
             
             echo "🚀 Run New Container"
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 \
-              -e TZ=Asia/Seoul \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              ${IMAGE_NAME}:latest
+            docker run -d --name $CONTAINER_NAME -p 8080:8080 ${IMAGE_NAME}:latest
             exit 0
           EOF
       - name: ⌛ Wait for Application to Start
@@ -158,10 +155,7 @@ jobs:
               fi
 
               echo "🔄 Rolling back to previous image: $PREVIOUS_IMAGE"
-              docker run -d --name $CONTAINER_NAME -p 8080:8080 \
-                -e TZ=Asia/Seoul \
-                -e SPRING_PROFILES_ACTIVE=prod \
-                $PREVIOUS_IMAGE
+              docker run -d --name $CONTAINER_NAME -p 8080:8080 $PREVIOUS_IMAGE
 
               if [ $? -eq 0 ]; then
                 echo "✅ Rollback completed successfully!"
