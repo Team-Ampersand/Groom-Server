@@ -10,7 +10,7 @@ jobs:
     environment: Deploy-Prod
     runs-on: ubuntu-latest
     outputs:
-        TIMESTAMP: ${{ steps.set_timestamp.outputs.TIMESTAMP }}
+      TIMESTAMP: ${{ steps.set_timestamp.outputs.TIMESTAMP }}
 
     steps:
       - name: 🕒 Set Timestamp
@@ -46,8 +46,8 @@ jobs:
 
   push:
     needs:
-        - build
-        - set
+      - build
+      - set
     runs-on: ubuntu-latest
     environment: Deploy-Prod
 
@@ -85,31 +85,33 @@ jobs:
           ssh-agent bash -c "ssh-add ~/.ssh/id_rsa"
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: 🚀 Deploy to Production
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          set -e
-          CONTAINER_NAME=groom-server
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
-          echo "🛑 Stop and Remove Existing Container"
-          docker stop $CONTAINER_NAME || true
-          docker rm $CONTAINER_NAME || true
-          
-          echo "📥 Pull Latest Image"
-          docker pull ${IMAGE_NAME}:latest
-          
-          echo "🚀 Run New Container"
-          docker run -d --name $CONTAINER_NAME -p 8080:8080 \
-          -e TZ=Asia/Seoul \
-          -e SPRING_PROFILES_ACTIVE=prod \
-          ${IMAGE_NAME}:latest
-          
-          echo "⌛ Waiting for Container to Start"
-          sleep 10
+        run: | 
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            set -e
+            CONTAINER_NAME=groom-server
+            IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
+            echo "🛑 Stop and Remove Existing Container"
+            docker stop $CONTAINER_NAME || true
+            docker rm $CONTAINER_NAME || true
+            
+            echo "📥 Pull Latest Image"
+            docker pull ${IMAGE_NAME}:latest
+            
+            echo "🚀 Run New Container"
+            docker run -d --name $CONTAINER_NAME -p 8080:8080 \
+              -e TZ=Asia/Seoul \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              ${IMAGE_NAME}:latest
+            exit 0
           EOF
+      - name: ⌛ Wait for Application to Start
+        run: sleep 30
+
 
   test:
     needs:
-        - deploy
-        - set
+      - deploy
+      - set
     runs-on: ubuntu-latest
     environment: Deploy-Prod
 
@@ -122,45 +124,60 @@ jobs:
           ssh-agent bash -c "ssh-add ~/.ssh/id_rsa"
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: 🫀 Check Application Health & Rollback if needed
+        id: health_check
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+          RESULT=$(ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
             CONTAINER_NAME=groom-server
             IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/groom-server"
             TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}
-      
+
             echo "🩺 Checking Application Health..."
-            RESPONSE=\$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
-      
-            if [ "\$RESPONSE" = "OK" ]; then
-              echo "✅ Deployment Successful!"
+            RESPONSE=$(curl -s https://${{ secrets.PROD_SERVER_URL }}/)
+
+            if [ "$RESPONSE" = "OK" ]; then
+              echo "DEPLOYMENT_STATUS=successful"
               exit 0
             else
               echo "❌ Deployment Failed! Rolling back..."
-          
-              docker stop \$CONTAINER_NAME || true
-              docker rm \$CONTAINER_NAME || true
-          
-              PREVIOUS_IMAGE=\$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "\$IMAGE_NAME" | grep -v "latest" | sort -r | sed -n '2p')
-          
-              if [ -z "\$PREVIOUS_IMAGE" ]; then
+
+              docker stop $CONTAINER_NAME || true
+              docker rm $CONTAINER_NAME || true
+
+              PREVIOUS_IMAGE=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "$IMAGE_NAME" | grep -v "latest" | sort -r | sed -n '2p')
+
+              if [ -z "$PREVIOUS_IMAGE" ]; then
                 echo "⚠️ No previous image found! Manual rollback required."
-                echo "::warning::⚠️ Deployment failed, and no previous image found. Manual rollback required!"
+                echo "DEPLOYMENT_STATUS=rollback_failed_no_previous"
                 exit 1
               fi
-          
-              echo "🔄 Rolling back to previous image: \$PREVIOUS_IMAGE"
-              docker run -d --name \$CONTAINER_NAME -p 8080:8080 \
+
+              echo "🔄 Rolling back to previous image: $PREVIOUS_IMAGE"
+              docker run -d --name $CONTAINER_NAME -p 8080:8080 \
                 -e TZ=Asia/Seoul \
                 -e SPRING_PROFILES_ACTIVE=prod \
-                \$PREVIOUS_IMAGE
-          
-              echo "✅ Rollback completed!"
-              echo "::warning::⚠️ Deployment failed, rollback was executed. Please check the logs for details!"
-          
-              exit 1
+                $PREVIOUS_IMAGE
+
+              if [ $? -eq 0 ]; then
+                echo "✅ Rollback completed successfully!"
+                echo "DEPLOYMENT_STATUS=rollback_success"
+                exit 2
+              else
+                echo "❌ Rollback execution failed!"
+                echo "DEPLOYMENT_STATUS=rollback_failure"
+                exit 3
+              fi
             fi
           EOF
-      - name: 📢 Post Warning in Summary
-        if: failure()
-        run: echo "⚠️ **Deployment failed, rollback was executed. Please check the logs for details!**" >> $GITHUB_STEP_SUMMARY
+          )
+
+          echo "$RESULT"
+          ROLLBACK_STATUS=$(echo "$RESULT" | grep "DEPLOYMENT_STATUS=" | cut -d '=' -f2)
+          echo "rollback_status=$ROLLBACK_STATUS" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      - name: 📢 Post Warning in Summary (Rollback Success)
+        if: steps.health_check.outputs.rollback_status == 'rollback_success'
+        run: echo "⚠️ Deployment failed, but rollback was successfully executed. Please verify the system." >> $GITHUB_STEP_SUMMARY
+      - name: 📢 Post Warning in Summary (Rollback Failed)
+        if: steps.health_check.outputs.rollback_status == 'rollback_failure' || steps.health_check.outputs.rollback_status == 'rollback_failed_no_previous'
+        run: echo "⚠️ Deployment failed and rollback was not successful. Manual intervention is required!" >> $GITHUB_STEP_SUMMARY
