@@ -16,10 +16,7 @@ jobs:
     steps:
       - name: 🕒 Set Timestamp
         id: set_timestamp
-        run: echo "TIMESTAMP=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-      - name: 🔄️ Set Docker Image Name
-        id: set_docker_image_name
-        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_OUTPUT
+        run: echo "TIMESTAMP=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
   build:
     needs: set
@@ -56,9 +53,9 @@ jobs:
 
     steps:
       - name: 📥 Load Outputs
-        run: |
-          echo "IMAGE_NAME=${{ needs.set.outputs.IMAGE_NAME }}"
-          echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
+        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
+      - name: 🏷️ Set Docker Image Name
+        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
       - name: 📂 Checkout Repository
         uses: actions/checkout@v3
       - name: 📦 Download Artifact
@@ -80,10 +77,6 @@ jobs:
     environment: Deploy-Prod
 
     steps:
-      - name: 📥 Load Outputs
-        run: |
-          echo "IMAGE_NAME=${{ needs.set.outputs.IMAGE_NAME }}"
-          echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
       - name: 🔑 Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -120,9 +113,9 @@ jobs:
 
     steps:
       - name: 📥 Load Outputs
-        run: |
-          echo "IMAGE_NAME=${{ needs.set.outputs.IMAGE_NAME }}"
-          echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
+        run: echo "TIMESTAMP=${{ needs.set.outputs.TIMESTAMP }}"
+      - name: 🏷️ Set Docker Image Name
+        run: echo "IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/groom-server" >> $GITHUB_ENV
       - name: 🔐 Setup SSH
         run: |
           mkdir -p ~/.ssh
