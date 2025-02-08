@@ -101,6 +101,8 @@ jobs:
             
             echo "🚀 Run New Container"
             docker run -d --name $CONTAINER_NAME -p 8080:8080 ${IMAGE_NAME}:latest
+            echo "🧹 Cleaning up old images"
+            docker system prune -af
             exit 0
           EOF
       - name: ⌛ Wait for Application to Start
