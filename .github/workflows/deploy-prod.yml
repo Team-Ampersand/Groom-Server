@@ -180,19 +180,19 @@ jobs:
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d '{"content": "✅ 서버 배포가 성공적으로 완료되었습니다!"}' \
+            -d '{"content": "✅ 서버 배포가 성공적으로 완료되었습니다!", "sender": "GitHub Actions"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: 📢 Discord Notification - Rollback Executed
         if: steps.health_check.outputs.rollback_status == 'rollback_success'
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d '{"content": "⚠️ 배포가 실패하여 롤백되었습니다. 이전 이미지로 롤백되었습니다."}' \
+            -d '{"content": "⚠️ 배포가 실패하여 롤백되었습니다. 이전 이미지로 롤백되었습니다.", "sender": "GitHub Actions"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: 📢 Discord Notification - Rollback Failed
         if: steps.health_check.outputs.rollback_status == 'rollback_failure' || steps.health_check.outputs.rollback_status == 'rollback_failed_no_previous'
         run: |
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d '{"content": "🚨 배포가 실패하여 롤백을 시도했지만 실패했습니다."}' \
+            -d '{"content": "🚨 배포가 실패하여 롤백을 시도했지만 실패했습니다.", "sender": "GitHub Actions"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
