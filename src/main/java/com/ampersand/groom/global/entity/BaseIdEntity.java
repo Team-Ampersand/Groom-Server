@@ -1,9 +1,11 @@
 package com.ampersand.groom.global.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @MappedSuperclass
-abstract class BaseIdEntity {
+public abstract class BaseIdEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
