@@ -7,5 +7,6 @@ FROM openjdk:21-jdk-slim AS runtime
 WORKDIR /app
 RUN apt-get update && apt-get install -y tzdata && rm -rf /var/lib/apt/lists/*
 ENV TZ=Asia/Seoul
+ENV SPRING_PROFILES_ACTIVE=prod
 COPY --from=build /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
