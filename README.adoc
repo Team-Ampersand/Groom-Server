@@ -38,3 +38,7 @@ README.adoc 파일을 작성했습니다
 |feature | 기능을 개발하는 브랜치 | develop
 |hotfix | 배포 버전에서 발생한 버그를 수정하는 브랜치 | main
 
+
+
+<iframe width="560" height="315" src='https://dbdiagram.io/e/67a86dc5263d6cf9a082a228/67a87ee5263d6cf9a0836d18'> </iframe>
+
