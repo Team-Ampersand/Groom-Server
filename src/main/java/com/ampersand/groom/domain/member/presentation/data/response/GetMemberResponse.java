@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 public class GetMemberResponse {
-    private UUID uuid;
+    private Long id;
     private String name;
     private Integer generation;
     private String email;

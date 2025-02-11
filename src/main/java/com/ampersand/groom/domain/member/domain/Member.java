@@ -4,12 +4,10 @@ import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 public class Member {
-    private final UUID id;
+    private final Long id;
     private final String name;
     private final String email;
     private final String password;
