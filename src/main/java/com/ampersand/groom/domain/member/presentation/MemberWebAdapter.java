@@ -1,6 +1,8 @@
 package com.ampersand.groom.domain.member.presentation;
 
+import com.ampersand.groom.domain.member.application.MemberApplicationAdapter;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
+import com.ampersand.groom.domain.member.presentation.data.request.UpdateMemberPasswordRequest;
 import com.ampersand.groom.domain.member.presentation.data.response.GetCurrentMemberResponse;
 import com.ampersand.groom.domain.member.presentation.data.response.GetMemberResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,23 +17,23 @@ import java.util.List;
 @RequestMapping("/api/v1/members")
 public class MemberWebAdapter {
 
-    // 의존성을 추가해주세요
+    private final MemberApplicationAdapter memberApplicationAdapter;
 
     @GetMapping
     public ResponseEntity<List<GetMemberResponse>> getAllMembers() {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.getAllMembers());
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<GetMemberResponse>> searchMembers(
-            @RequestParam(value = "uuid", required = false) String uuid,
+            @RequestParam(value = "id", required = false) Long id,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "generation", required = false) Integer generation,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "isAvailable", required = false) Boolean isAvailable,
             @RequestParam(value = "role", required = false) MemberRole role
     ) {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.searchMembers(id, name, generation, email, isAvailable, role));
     }
 
     @GetMapping("/current")
@@ -39,9 +41,9 @@ public class MemberWebAdapter {
         return null;
     }
 
-    @PatchMapping("/password")
+    @PatchMapping("/{id}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> updateMemberPassword() {
+    public ResponseEntity<Void> updateMemberPassword(@PathVariable Long id, @RequestBody UpdateMemberPasswordRequest request) {
         return null;
     }
 }
