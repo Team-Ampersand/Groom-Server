@@ -1,6 +1,6 @@
 package com.ampersand.groom.domain.member.application.usecase;
 
-import com.ampersand.groom.domain.member.application.port.MemberPersistenceReadPort;
+import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.persistence.mapper.MemberMapper;
 import com.ampersand.groom.domain.member.presentation.data.response.GetMemberResponse;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithReadOnlyTransaction;
@@ -12,11 +12,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QueryAllMemberUseCase {
 
-    private final MemberPersistenceReadPort memberPersistenceReadPort;
+    private final MemberPersistencePort memberPersistencePort;
     private final MemberMapper memberMapper;
 
     public List<GetMemberResponse> execute() {
-        return memberPersistenceReadPort.queryAllMember().stream().map(
+        return memberPersistencePort.queryAllMember().stream().map(
                 memberMapper::toResponse
         ).toList();
     }

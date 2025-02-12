@@ -1,7 +1,6 @@
 package com.ampersand.groom.domain.member.persistence;
 
-import com.ampersand.groom.domain.member.application.port.MemberPersistenceReadPort;
-import com.ampersand.groom.domain.member.application.port.MemberPersistenceWritePort;
+import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import com.ampersand.groom.domain.member.exception.MemberNotFoundException;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @Adapter(AdapterType.OUTBOUND)
 @RequiredArgsConstructor
-public class MemberPersistenceAdapter implements MemberPersistenceReadPort, MemberPersistenceWritePort {
+public class MemberPersistenceAdapter implements MemberPersistencePort {
 
     private final MemberJpaRepository memberJpaRepository;
     private final MemberMapper memberMapper;
