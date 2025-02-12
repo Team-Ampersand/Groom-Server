@@ -36,6 +36,6 @@ public class MemberApplicationAdapter implements MemberApplicationPort {
 
     @Override
     public void updatePassword(Long id, String currentPassword, String newPassword) {
-
+        // TODO: 인증/인가 및 Email 전송 로직 구현 시 구현
     }
 }

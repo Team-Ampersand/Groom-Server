@@ -36,7 +36,7 @@ public class MemberWebAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.searchMembers(id, name, generation, email, isAvailable, role));
     }
 
-    @GetMapping("/current")
+    @GetMapping("/current")  // TODO: 인증/인가 및 booking 관련 로직 구현 시 구현
     public ResponseEntity<GetCurrentMemberResponse> getCurrentMember() {
         return null;
     }
@@ -44,6 +44,6 @@ public class MemberWebAdapter {
     @PatchMapping("/{id}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> updateMemberPassword(@PathVariable Long id, @RequestBody UpdateMemberPasswordRequest request) {
-        return null;
+        return null;  // TODO: 인증/인가 및 Email 전송 로직 구현 시 구현
     }
 }
