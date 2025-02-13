@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Member 검색 UseCase 클래스의")
-public class SearchMemberUseCaseTest {
+public class FindMembersByCriteriaUseCaseTest {
 
     @Mock
     private MemberPersistencePort memberPersistencePort;
@@ -31,7 +31,7 @@ public class SearchMemberUseCaseTest {
     private MemberMapper memberMapper;
 
     @InjectMocks
-    private SearchMemberUseCase searchMemberUseCase;
+    private FindMembersByCriteriaUseCase findMembersByCriteriaUseCase;
 
     @DisplayName("execute 메서드는")
     @Nested
@@ -63,16 +63,16 @@ public class SearchMemberUseCaseTest {
                                 .build()
                 );
 
-                when(memberPersistencePort.searchMember(id, name, generation, email, isAvailable, role))
+                when(memberPersistencePort.findMembersByCriteria(id, name, generation, email, isAvailable, role))
                         .thenReturn(members);
                 when(memberMapper.toResponse(members.getFirst()))
                         .thenReturn(new GetMemberResponse(1L, "홍길동", 1, "s00001@gsm.hs.kr", true, MemberRole.ROLE_STUDENT));
 
                 // when
-                List<GetMemberResponse> result = searchMemberUseCase.execute(id, name, generation, email, isAvailable, role);
+                List<GetMemberResponse> result = findMembersByCriteriaUseCase.execute(id, name, generation, email, isAvailable, role);
 
                 // then
-                verify(memberPersistencePort).searchMember(id, name, generation, email, isAvailable, role);
+                verify(memberPersistencePort).findMembersByCriteria(id, name, generation, email, isAvailable, role);
                 assertEquals(1, result.size());
                 assertEquals("홍길동", result.getFirst().name());
                 assertEquals("s00001@gsm.hs.kr", result.getFirst().email());
@@ -101,16 +101,16 @@ public class SearchMemberUseCaseTest {
                                 .build()
                 );
 
-                when(memberPersistencePort.searchMember(null, name, null, null, isAvailable, null))
+                when(memberPersistencePort.findMembersByCriteria(null, name, null, null, isAvailable, null))
                         .thenReturn(members);
                 when(memberMapper.toResponse(members.getFirst()))
                         .thenReturn(new GetMemberResponse(2L, "성춘향", 2, "s00002@gsm.hs.kr", true, MemberRole.ROLE_STUDENT));
 
                 // when
-                List<GetMemberResponse> result = searchMemberUseCase.execute(null, name, null, null, isAvailable, null);
+                List<GetMemberResponse> result = findMembersByCriteriaUseCase.execute(null, name, null, null, isAvailable, null);
 
                 // then
-                verify(memberPersistencePort).searchMember(null, name, null, null, isAvailable, null);
+                verify(memberPersistencePort).findMembersByCriteria(null, name, null, null, isAvailable, null);
                 assertEquals(1, result.size());
                 assertEquals("성춘향", result.getFirst().name());
                 assertEquals("s00002@gsm.hs.kr", result.getFirst().email());
@@ -127,14 +127,14 @@ public class SearchMemberUseCaseTest {
                 // given
                 String name = "놀부";
 
-                when(memberPersistencePort.searchMember(null, name, null, null, null, null))
+                when(memberPersistencePort.findMembersByCriteria(null, name, null, null, null, null))
                         .thenReturn(List.of());
 
                 // when
-                List<GetMemberResponse> result = searchMemberUseCase.execute(null, name, null, null, null, null);
+                List<GetMemberResponse> result = findMembersByCriteriaUseCase.execute(null, name, null, null, null, null);
 
                 // then
-                verify(memberPersistencePort).searchMember(null, name, null, null, null, null);
+                verify(memberPersistencePort).findMembersByCriteria(null, name, null, null, null, null);
                 assertTrue(result.isEmpty());
             }
         }
@@ -166,7 +166,7 @@ public class SearchMemberUseCaseTest {
                                 .build()
                 );
 
-                when(memberPersistencePort.searchMember(null, null, null, null, null, null))
+                when(memberPersistencePort.findMembersByCriteria(null, null, null, null, null, null))
                         .thenReturn(members);
                 when(memberMapper.toResponse(members.get(0)))
                         .thenReturn(new GetMemberResponse(1L, "홍길동", 1, "s00001@gsm.hs.kr", true, MemberRole.ROLE_STUDENT));
@@ -174,10 +174,10 @@ public class SearchMemberUseCaseTest {
                         .thenReturn(new GetMemberResponse(2L, "성춘향", 2, "s00002@gsm.hs.kr", false, MemberRole.ROLE_ADMIN));
 
                 // when
-                List<GetMemberResponse> result = searchMemberUseCase.execute(null, null, null, null, null, null);
+                List<GetMemberResponse> result = findMembersByCriteriaUseCase.execute(null, null, null, null, null, null);
 
                 // then
-                verify(memberPersistencePort).searchMember(null, null, null, null, null, null);
+                verify(memberPersistencePort).findMembersByCriteria(null, null, null, null, null, null);
                 assertEquals(2, result.size());
                 assertEquals("홍길동", result.get(0).name());
                 assertEquals("성춘향", result.get(1).name());

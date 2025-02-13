@@ -6,7 +6,7 @@ import com.ampersand.groom.domain.member.persistence.entity.MemberJpaEntity;
 import java.util.List;
 
 public interface MemberRepositoryCustom {
-    void updatePassword(Long id, String newPassword);
+    List<MemberJpaEntity> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role);
 
-    List<MemberJpaEntity> searchMember(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role);
+    void updatePassword(Long id, String newPassword);
 }

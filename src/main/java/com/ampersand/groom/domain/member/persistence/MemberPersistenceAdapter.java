@@ -20,21 +20,21 @@ public class MemberPersistenceAdapter implements MemberPersistencePort {
     private final MemberMapper memberMapper;
 
     @Override
-    public List<Member> queryAllMember() {
+    public List<Member> findAllMembers() {
         return memberJpaRepository.findAll().stream()
                 .map(memberMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public List<Member> searchMember(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
-        return memberJpaRepository.searchMember(id, name, generation, email, isAvailable, role).stream()
+    public List<Member> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
+        return memberJpaRepository.findMembersByCriteria(id, name, generation, email, isAvailable, role).stream()
                 .map(memberMapper::toDomain)
                 .toList();
     }
 
     @Override
-    public Member queryMember(Long id) {
+    public Member findMemberById(Long id) {
         return memberJpaRepository.findById(id)
                 .map(memberMapper::toDomain)
                 .orElseThrow(MemberNotFoundException::new);

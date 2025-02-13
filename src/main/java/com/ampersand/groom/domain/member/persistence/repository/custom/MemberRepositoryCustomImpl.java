@@ -29,7 +29,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     }
 
     @Override
-    public List<MemberJpaEntity> searchMember(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
+    public List<MemberJpaEntity> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
         return queryFactory
                 .selectFrom(memberJpaEntity)
                 .where(

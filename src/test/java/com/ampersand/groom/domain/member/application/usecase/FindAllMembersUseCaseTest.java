@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Member 전체 조회 UseCase 클래스의")
-class QueryAllMemberUseCaseTest {
+class FindAllMembersUseCaseTest {
 
     @Mock
     private MemberPersistencePort memberPersistencePort;
@@ -28,7 +28,7 @@ class QueryAllMemberUseCaseTest {
     private MemberMapper memberMapper;
 
     @InjectMocks
-    private QueryAllMemberUseCase queryAllMemberUseCase;
+    private FindAllMembersUseCase findAllMembersUseCase;
 
     @DisplayName("execute 메서드는")
     @Nested
@@ -69,7 +69,7 @@ class QueryAllMemberUseCaseTest {
                                 .build()
                 );
 
-                when(memberPersistencePort.queryAllMember()).thenReturn(members);
+                when(memberPersistencePort.findAllMembers()).thenReturn(members);
 
                 members.forEach(member -> {
                     when(memberMapper.toResponse(member)).thenReturn(
@@ -85,10 +85,10 @@ class QueryAllMemberUseCaseTest {
                 });
 
                 // when
-                List<GetMemberResponse> result = queryAllMemberUseCase.execute();
+                List<GetMemberResponse> result = findAllMembersUseCase.execute();
 
                 // then
-                verify(memberPersistencePort).queryAllMember();
+                verify(memberPersistencePort).findAllMembers();
                 assertEquals(members.size(), result.size());
                 for (int i = 0; i < members.size(); i++) {
                     assertMemberEquals(members.get(i), result.get(i));
@@ -104,13 +104,13 @@ class QueryAllMemberUseCaseTest {
             @DisplayName("빈 리스트를 반환한다.")
             void it_returns_an_empty_list() {
                 // given
-                when(memberPersistencePort.queryAllMember()).thenReturn(List.of());
+                when(memberPersistencePort.findAllMembers()).thenReturn(List.of());
 
                 // when
-                List<GetMemberResponse> result = queryAllMemberUseCase.execute();
+                List<GetMemberResponse> result = findAllMembersUseCase.execute();
 
                 // then
-                verify(memberPersistencePort).queryAllMember();
+                verify(memberPersistencePort).findAllMembers();
                 assertTrue(result.isEmpty());
             }
         }

@@ -1,8 +1,8 @@
 package com.ampersand.groom.domain.member.application;
 
 import com.ampersand.groom.domain.member.application.port.MemberApplicationPort;
-import com.ampersand.groom.domain.member.application.usecase.QueryAllMemberUseCase;
-import com.ampersand.groom.domain.member.application.usecase.SearchMemberUseCase;
+import com.ampersand.groom.domain.member.application.usecase.FindAllMembersUseCase;
+import com.ampersand.groom.domain.member.application.usecase.FindMembersByCriteriaUseCase;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import com.ampersand.groom.domain.member.presentation.data.response.GetCurrentMemberResponse;
 import com.ampersand.groom.domain.member.presentation.data.response.GetMemberResponse;
@@ -16,17 +16,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberApplicationAdapter implements MemberApplicationPort {
 
-    private final QueryAllMemberUseCase queryAllMemberUseCase;
-    private final SearchMemberUseCase searchMemberUseCase;
+    private final FindAllMembersUseCase findAllMembersUseCase;
+    private final FindMembersByCriteriaUseCase findMembersByCriteriaUseCase;
 
     @Override
     public List<GetMemberResponse> getAllMembers() {
-        return queryAllMemberUseCase.execute();
+        return findAllMembersUseCase.execute();
     }
 
     @Override
     public List<GetMemberResponse> searchMembers(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
-        return searchMemberUseCase.execute(id, name, generation, email, isAvailable, role);
+        return findMembersByCriteriaUseCase.execute(id, name, generation, email, isAvailable, role);
     }
 
     @Override
