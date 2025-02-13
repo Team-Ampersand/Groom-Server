@@ -20,17 +20,17 @@ public class MemberApplicationAdapter implements MemberApplicationPort {
     private final FindMembersByCriteriaUseCase findMembersByCriteriaUseCase;
 
     @Override
-    public List<GetMemberResponse> getAllMembers() {
+    public List<GetMemberResponse> findAllMembers() {
         return findAllMembersUseCase.execute();
     }
 
     @Override
-    public List<GetMemberResponse> searchMembers(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
+    public List<GetMemberResponse> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
         return findMembersByCriteriaUseCase.execute(id, name, generation, email, isAvailable, role);
     }
 
     @Override
-    public GetCurrentMemberResponse getCurrentMember() {
+    public GetCurrentMemberResponse findCurrentMember() {
         return null;  // TODO: 인증/인가 및 booking 관련 로직 구현 시 구현
     }
 

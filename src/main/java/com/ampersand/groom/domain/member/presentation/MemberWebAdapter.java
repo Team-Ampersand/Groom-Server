@@ -21,7 +21,7 @@ public class MemberWebAdapter {
 
     @GetMapping
     public ResponseEntity<List<GetMemberResponse>> getAllMembers() {
-        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.getAllMembers());
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.findAllMembers());
     }
 
     @GetMapping("/search")
@@ -33,7 +33,7 @@ public class MemberWebAdapter {
             @RequestParam(value = "isAvailable", required = false) Boolean isAvailable,
             @RequestParam(value = "role", required = false) MemberRole role
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.searchMembers(id, name, generation, email, isAvailable, role));
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.findMembersByCriteria(id, name, generation, email, isAvailable, role));
     }
 
     @GetMapping("/current")  // TODO: 인증/인가 및 booking 관련 로직 구현 시 구현

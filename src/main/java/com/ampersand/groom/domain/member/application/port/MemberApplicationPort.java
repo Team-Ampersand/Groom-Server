@@ -7,11 +7,11 @@ import com.ampersand.groom.domain.member.presentation.data.response.GetMemberRes
 import java.util.List;
 
 public interface MemberApplicationPort {
-    List<GetMemberResponse> getAllMembers();
+    List<GetMemberResponse> findAllMembers();
 
-    List<GetMemberResponse> searchMembers(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role);
+    List<GetMemberResponse> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role);
 
-    GetCurrentMemberResponse getCurrentMember();
+    GetCurrentMemberResponse findCurrentMember();
 
     void updatePassword(Long id, String currentPassword, String newPassword);
 }
