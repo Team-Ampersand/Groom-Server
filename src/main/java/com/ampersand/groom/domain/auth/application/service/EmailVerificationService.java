@@ -20,7 +20,7 @@ public class EmailVerificationService {
     private final JavaMailSender javaMailSender;
 
 
-    //6자리 숫자 인증 코드 생성
+    //8자리 숫자 인증 코드 생성
     private String generateVerificationCode() {
         Random random = new Random();
         int code = 10000000 + random.nextInt(90000000);
