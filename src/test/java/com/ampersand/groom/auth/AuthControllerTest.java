@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("EmailVerificationController 클래스의")
+@DisplayName("AuthController 클래스의")
 class AuthControllerTest {
 
     @Mock
@@ -48,7 +48,7 @@ class AuthControllerTest {
                 when(emailVerificationUseCase.executeVerifyEmail(validCode)).thenReturn(true);
 
                 // when & then
-                mockMvc.perform(post("/auth/verify-email")
+                mockMvc.perform(post("/auth/email/verify-email")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"code\":\"" + validCode + "\"}"))
                         .andExpect(status().isResetContent())  // 205 상태 코드 반환
@@ -70,7 +70,7 @@ class AuthControllerTest {
                 String invalidCode = "12345";  // 5자리 코드 (잘못된 형식)
 
                 // when & then
-                mockMvc.perform(post("/auth/verify-email")
+                mockMvc.perform(post("/auth/email/verify-email")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"code\":\"" + invalidCode + "\"}"))
                         .andExpect(status().isBadRequest())  // 400 상태 코드 반환
@@ -93,7 +93,7 @@ class AuthControllerTest {
                 when(emailVerificationUseCase.executeVerifyEmail(invalidCode)).thenReturn(false);
 
                 // when & then
-                mockMvc.perform(post("/auth/verify-email")
+                mockMvc.perform(post("/auth/email/verify-email")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"code\":\"" + invalidCode + "\"}"))
                         .andExpect(status().isUnauthorized())  // 401 상태 코드 반환
@@ -120,7 +120,7 @@ class AuthControllerTest {
                 String validEmail = "test@example.com";
 
                 // when & then
-                mockMvc.perform(post("/auth/signup")
+                mockMvc.perform(post("/auth/email/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"email\":\"" + validEmail + "\"}"))
                         .andExpect(status().isResetContent())
@@ -142,7 +142,7 @@ class AuthControllerTest {
                 String invalidEmail = "tooooolongemail@example.com";
 
                 // when & then
-                mockMvc.perform(post("/auth/signup")
+                mockMvc.perform(post("/auth/email/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"email\":\"" + invalidEmail + "\"}"))
                         .andExpect(status().isBadRequest())
@@ -166,7 +166,7 @@ class AuthControllerTest {
                 String validEmail = "test@example.com";
 
                 // when & then
-                mockMvc.perform(post("/auth/refresh")
+                mockMvc.perform(post("/auth/email/refresh")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"email\":\"" + validEmail + "\"}"))
                         .andExpect(status().isResetContent())
@@ -188,7 +188,7 @@ class AuthControllerTest {
                 String invalidEmail = "tooooolongemail@example.com";
 
                 // when & then
-                mockMvc.perform(post("/auth/refresh")
+                mockMvc.perform(post("/auth/email/refresh")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("{\"email\":\"" + invalidEmail + "\"}"))
                         .andExpect(status().isBadRequest())
