@@ -18,6 +18,8 @@ public class AuthController {
 
     private final EmailVerificationUseCase emailVerificationUseCase;
 
+    private static final int VERIFICATION_CODE_LENGTH = 8;
+    private static final int MAX_EMAIL_LENGTH = 16;
 
 
 
@@ -25,7 +27,7 @@ public class AuthController {
     public ResponseEntity<?> verifyEmail(@RequestBody Map<String, Object> body) {
         String code = (String) body.get("code");
 
-        if (code == null || code.length() != 8) {
+        if (code == null || code.length() != VERIFICATION_CODE_LENGTH) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid verification code format.");
         }
 
@@ -41,7 +43,7 @@ public class AuthController {
     public ResponseEntity<?> signup(@RequestBody Map<String, Object> body) {
         String email = (String) body.get("email");
 
-        if (email == null || email.length() > 16) {
+        if (email == null || email.length() > MAX_EMAIL_LENGTH) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format.");
         }
 
@@ -53,7 +55,7 @@ public class AuthController {
     public ResponseEntity<?> refresh(@RequestBody Map<String, Object> body) {
         String email = (String) body.get("email");
 
-        if (email == null || email.length() > 16) {
+        if (email == null || email.length() > MAX_EMAIL_LENGTH) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email format.");
         }
 
