@@ -20,7 +20,7 @@ public class AuthController {
         this.emailVerificationUseCase = emailVerificationUseCase;
     }
 
-    @PostMapping("/verify-email")
+    @PostMapping("/email/verify-email")
     public ResponseEntity<?> verifyEmail(@RequestBody Map<String, Object> body) {
         String code = (String) body.get("code");
 
@@ -36,7 +36,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/email/signup")
     public ResponseEntity<?> signup(@RequestBody Map<String, Object> body) {
         String email = (String) body.get("email");
 
@@ -48,7 +48,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Verification email sent");
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/email/refresh")
     public ResponseEntity<?> refresh(@RequestBody Map<String, Object> body) {
         String email = (String) body.get("email");
 
