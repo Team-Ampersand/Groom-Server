@@ -1,6 +1,7 @@
 package com.ampersand.groom.domain.auth.presentation.controller;
 
 import com.ampersand.groom.domain.auth.application.usecase.EmailVerificationUseCase;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,13 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final EmailVerificationUseCase emailVerificationUseCase;
-
-    public AuthController(EmailVerificationUseCase emailVerificationUseCase) {
-        this.emailVerificationUseCase = emailVerificationUseCase;
-    }
 
     @PostMapping("/email/verify-email")
     public ResponseEntity<?> verifyEmail(@RequestBody Map<String, Object> body) {
