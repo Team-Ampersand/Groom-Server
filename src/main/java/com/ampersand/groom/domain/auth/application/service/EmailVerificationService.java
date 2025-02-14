@@ -3,6 +3,7 @@ package com.ampersand.groom.domain.auth.application.service;
 import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
 import com.ampersand.groom.domain.auth.domain.model.EmailVerification;
 import com.ampersand.groom.domain.auth.expection.AuthException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,15 +13,12 @@ import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class EmailVerificationService {
 
     private final EmailVerificationPort emailVerificationPort;
     private final JavaMailSender javaMailSender;
 
-    public EmailVerificationService(EmailVerificationPort emailVerificationPort, JavaMailSender javaMailSender) {
-        this.emailVerificationPort = emailVerificationPort;
-        this.javaMailSender = javaMailSender;
-    }
 
     //6자리 숫자 인증 코드 생성
     private String generateVerificationCode() {
