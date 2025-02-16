@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.domain.model;
+package com.ampersand.groom.domain.auth.persistence;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @Table(name = "email")
 @ToString
@@ -31,6 +30,7 @@ public class EmailVerification {
         this.isVerified = false;
         this.verificationDate = LocalDateTime.now().plusMinutes(5);
     }
+
 
     @Builder
     public EmailVerification(Long id, String email, String code, boolean isVerified, LocalDateTime verificationDate) {
