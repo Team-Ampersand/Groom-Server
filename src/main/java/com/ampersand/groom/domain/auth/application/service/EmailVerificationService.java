@@ -1,15 +1,14 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
-import com.ampersand.groom.domain.auth.domain.model.EmailVerification;
-import com.ampersand.groom.domain.auth.expection.AuthException;
+import com.ampersand.groom.domain.auth.expection.InvalidFormatException;
+import com.ampersand.groom.domain.auth.expection.InvalidOrExpiredCodeException;
+import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -18,6 +17,9 @@ public class EmailVerificationService {
 
     private final EmailVerificationPort emailVerificationPort;
     private final JavaMailSender javaMailSender;
+
+    private static final int MAX_EMAIL_LENGTH = 16;
+    private static final int CODE_LENGTH = 8;
 
 
     //8자리 숫자 인증 코드 생성
@@ -55,18 +57,23 @@ public class EmailVerificationService {
     }
 
     // 인증 코드 검증
-    public boolean verifyEmailCode(String code) {
+    public void verifyCode(String code) {
+        if(code == null || code.length() > CODE_LENGTH) {
+            throw new InvalidFormatException();
+        }
+
         EmailVerification emailVerification = emailVerificationPort.findByCode(code)
-                .orElseThrow(() -> new AuthException("Invalid or expired verification code"));
-
-        emailVerification.setVerified(true);
+                .orElseThrow(InvalidOrExpiredCodeException::new);
         emailVerificationPort.save(emailVerification);
-        return true;
     }
 
-    // 만료된 인증 정보 삭제(1시간)
-    @Scheduled(fixedRate = 3600000)
-    public void deleteExpiredVerifications() {
-        emailVerificationPort.deleteAllExpired(LocalDateTime.now());
+    // 이메일 검증
+    public void verifyEmail(String email) {
+        if(email == null || email.length() != MAX_EMAIL_LENGTH) {
+            throw new InvalidFormatException();
+        }
+
     }
+
+
 }
