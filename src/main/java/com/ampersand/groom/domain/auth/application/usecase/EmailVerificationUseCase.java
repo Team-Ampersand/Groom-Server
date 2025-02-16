@@ -26,9 +26,4 @@ public class EmailVerificationUseCase {
         emailVerificationService.verifyCode(code);
     }
 
-    // 이메일 검증
-    public void executeVerifyEmail(String email) {
-        emailVerificationService.verifyEmail(email);
-    }
-
 }

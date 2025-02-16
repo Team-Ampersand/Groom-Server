@@ -40,19 +40,23 @@ public class EmailVerificationService {
 
     // 회원가입 인증 이메일 전송
     public void sendSignupVerificationEmail(String email) {
+        verifyEmail(email);
         String code = generateVerificationCode();
         sendEmail(email, "회원가입 인증", "귀하의 인증 코드는: " + code);
 
         EmailVerification emailVerification = new EmailVerification(email, code);
+        
         emailVerificationPort.save(emailVerification);
     }
 
     // 비밀번호 변경을 위한 인증 이메일 전송
     public void sendPasswordResetEmail(String email) {
+        verifyEmail(email);
         String code = generateVerificationCode();
         sendEmail(email, "비밀번호 변경 인증", "귀하의 인증 코드는: " + code);
 
         EmailVerification emailVerification = new EmailVerification(email, code);
+        
         emailVerificationPort.save(emailVerification);
     }
 
@@ -64,6 +68,9 @@ public class EmailVerificationService {
 
         EmailVerification emailVerification = emailVerificationPort.findByCode(code)
                 .orElseThrow(InvalidOrExpiredCodeException::new);
+
+
+        emailVerification.setIsVerified(true);
         emailVerificationPort.save(emailVerification);
     }
 
@@ -74,6 +81,4 @@ public class EmailVerificationService {
         }
 
     }
-
-
 }

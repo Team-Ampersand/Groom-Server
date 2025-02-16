@@ -28,14 +28,12 @@ public class AuthController {
 
     @PostMapping("/signup/email")
     public ResponseEntity<?> signup(@RequestBody @Valid EmailRequest request) {
-        emailVerificationUseCase.executeVerifyEmail(request.getEmail());
         emailVerificationUseCase.executeSendSignupVerificationEmail(request.getEmail());
         return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Verification email sent");
     }
 
     @PostMapping("/password-change/email")
     public ResponseEntity<?> refresh(@RequestBody @Valid EmailRequest request) {
-        emailVerificationUseCase.executeVerifyEmail(request.getEmail());
         emailVerificationUseCase.executeSendPasswordResetEmail(request.getEmail());
         return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Verification email sent");
     }

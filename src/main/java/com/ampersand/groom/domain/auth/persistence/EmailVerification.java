@@ -42,4 +42,7 @@ public class EmailVerification {
     }
 
 
+    public void setIsVerified(boolean isVerified) {
+        this.isVerified = isVerified;
+    }
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class VerificationCodeRequest {
 
-    @Size(min = 8, max = 8, message = "Verification code must be 8 digits")
+    @Size(min = 8, max = 8, message = "Invalid format")
     private final String code;
 
     public VerificationCodeRequest(String code) {

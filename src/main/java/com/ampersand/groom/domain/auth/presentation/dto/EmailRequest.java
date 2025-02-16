@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class EmailRequest {
 
-    @Email(message = "Invalid email format")
+    @Email(message = "Invalid format")
     private final String email;
 
     public EmailRequest(String email) {
