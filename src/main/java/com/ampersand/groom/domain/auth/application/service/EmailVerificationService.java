@@ -58,7 +58,7 @@ public class EmailVerificationService {
 
     // 인증 코드 검증
     public void verifyCode(String code) {
-        if(code == null || code.length() > CODE_LENGTH) {
+        if(code == null || code.length() != CODE_LENGTH) {
             throw new InvalidFormatException();
         }
 
