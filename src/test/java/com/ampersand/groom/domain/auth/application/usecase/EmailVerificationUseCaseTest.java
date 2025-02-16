@@ -1,13 +1,16 @@
 package com.ampersand.groom.domain.auth.application.usecase;
 
 import com.ampersand.groom.domain.auth.application.service.EmailVerificationService;
+import com.ampersand.groom.domain.auth.expection.InvalidFormatException;
+import com.ampersand.groom.domain.auth.expection.InvalidOrExpiredCodeException;
+import com.ampersand.groom.domain.auth.application.usecase.EmailVerificationUseCase;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -20,12 +23,12 @@ class EmailVerificationUseCaseTest {
     @InjectMocks
     private EmailVerificationUseCase emailVerificationUseCase;
 
-    @Nested
     @DisplayName("executeSendSignupVerificationEmail 메서드는")
+    @Nested
     class Describe_executeSendSignupVerificationEmail {
 
         @Nested
-        @DisplayName("유효한 이메일이 제공될 때")
+        @DisplayName("유효한 이메일을 입력했을 때")
         class Context_with_valid_email {
 
             @Test
@@ -38,166 +41,132 @@ class EmailVerificationUseCaseTest {
                 emailVerificationUseCase.executeSendSignupVerificationEmail(email);
 
                 // then
-                verify(emailVerificationService).sendSignupVerificationEmail(email);
+                verify(emailVerificationService).sendSignupVerificationEmail(email); // 메서드 호출 검증
             }
         }
 
         @Nested
-        @DisplayName("유효하지 않은 이메일이 제공될 때")
+        @DisplayName("유효하지 않은 이메일을 입력했을 때")
         class Context_with_invalid_email {
 
             @Test
-            @DisplayName("예외를 발생시킨다.")
-            void it_throws_exception() {
+            @DisplayName("InvalidFormatException을 발생시킨다.")
+            void it_throws_invalid_format_exception() {
                 // given
-                String email = "invalid-email";
-                doThrow(new IllegalArgumentException("Invalid email"))
-                        .when(emailVerificationService).sendSignupVerificationEmail(email);
+                String invalidEmail = "email"; // 잘못된 이메일 주소
 
-                // when & then
-                assertThrows(IllegalArgumentException.class,
-                        () -> emailVerificationUseCase.executeSendSignupVerificationEmail(email));
-            }
-        }
-    }
-
-    @Nested
-    @DisplayName("executeSendPasswordResetEmail 메서드는")
-    class Describe_executeSendPasswordResetEmail {
-
-        @Nested
-        @DisplayName("유효한 이메일이 제공될 때")
-        class Context_with_valid_email {
-
-            @Test
-            @DisplayName("비밀번호 변경 인증 이메일을 전송한다.")
-            void it_sends_password_reset_email() {
-                // given
-                String email = "test@example.com";
 
                 // when
-                emailVerificationUseCase.executeSendPasswordResetEmail(email);
+                doThrow(new InvalidFormatException())
+                        .when(emailVerificationService).sendSignupVerificationEmail(invalidEmail);
+
+
+                InvalidFormatException exception = assertThrows(InvalidFormatException.class, () -> {
+                    emailVerificationUseCase.executeSendSignupVerificationEmail(invalidEmail); // 이메일 전송 시 예외 발생해야 함
+                });
 
                 // then
-                verify(emailVerificationService).sendPasswordResetEmail(email);
+                assertEquals("Invalid format", exception.getErrorCode().getMessage()); // 예외 메시지 확인
+                assertEquals(400, exception.getErrorCode().getHttpStatus()); // HTTP 상태 코드 확인
             }
+
         }
 
+        @DisplayName("executeSendPasswordResetEmail 메서드는")
         @Nested
-        @DisplayName("유효하지 않은 이메일이 제공될 때")
-        class Context_with_invalid_email {
+        class Describe_executeSendPasswordResetEmail {
 
-            @Test
-            @DisplayName("예외를 발생시킨다.")
-            void it_throws_exception() {
-                // given
-                String email = "invalid-email";
-                doThrow(new IllegalArgumentException("Invalid email"))
-                        .when(emailVerificationService).sendPasswordResetEmail(email);
+            @Nested
+            @DisplayName("유효한 이메일을 입력했을 때")
+            class Context_with_valid_email {
 
-                // when & then
-                assertThrows(IllegalArgumentException.class,
-                        () -> emailVerificationUseCase.executeSendPasswordResetEmail(email));
+                @Test
+                @DisplayName("비밀번호 변경 인증 이메일을 전송한다.")
+                void it_sends_password_reset_email() {
+                    // given
+                    String email = "s24010@gsm.hs.kr";
+
+                    // when
+                    emailVerificationUseCase.executeSendPasswordResetEmail(email);
+
+                    // then
+                    verify(emailVerificationService).sendPasswordResetEmail(email); // 메서드 호출 검증
+                }
             }
-        }
-    }
 
-    @Nested
-    @DisplayName("executeVerifyCode 메서드는")
-    class Describe_executeVerifyCode {
+            @Nested
+            @DisplayName("유효하지 않은 이메일을 입력했을 때")
+            class Context_with_invalid_email {
 
-        @Nested
-        @DisplayName("유효한 인증 코드가 제공될 때")
-        class Context_with_valid_code {
+                @Test
+                @DisplayName("InvalidFormatException을 발생시킨다.")
+                void it_throws_invalid_format_exception() {
+                    // given
+                    String invalidEmail = "email"; // 잘못된 이메일 주소
 
-            @Test
-            @DisplayName("인증 코드를 검증한다.")
-            void it_verifies_the_code() {
-                // given
-                String code = "123456";
+                    // when
+                    doThrow(new InvalidFormatException())
+                            .when(emailVerificationService).sendPasswordResetEmail(invalidEmail);
 
-                // when
-                emailVerificationUseCase.executeVerifyCode(code);
+                    InvalidFormatException exception = assertThrows(InvalidFormatException.class, () -> {
+                        emailVerificationUseCase.executeSendPasswordResetEmail(invalidEmail); // 이메일 전송 시 예외 발생해야 함
+                    });
 
-                // then
-                verify(emailVerificationService).verifyCode(code);
-            }
-        }
-
-        @Nested
-        @DisplayName("잘못된 형식의 인증 코드가 제공될 때")
-        class Context_with_invalid_code_form {
-
-            @Test
-            @DisplayName("예외를 발생시킨다.")
-            void it_throws_exception() {
-                // given
-                String code = "1234";
-                doThrow(new IllegalArgumentException("Invalid code"))
-                        .when(emailVerificationService).verifyCode(code);
-
-                //when & then
-                assertThrows(IllegalArgumentException.class, () -> emailVerificationUseCase.executeVerifyCode(code));
+                    // then
+                    assertEquals("Invalid format", exception.getErrorCode().getMessage());
+                    assertEquals(400, exception.getErrorCode().getHttpStatus());
+                }
 
             }
         }
 
+        @DisplayName("executeVerifyCode 메서드는")
         @Nested
-        @DisplayName("유효하지 않은 인증 코드가 제공될 때")
-        class Context_with_invalid_code {
+        class Describe_executeVerifyCode {
 
-            @Test
-            @DisplayName("예외를 발생시킨다.")
-            void it_throws_exception() {
-                // given
-                String code = "invalid-code";
-                doThrow(new IllegalArgumentException("Invalid verification code"))
-                        .when(emailVerificationService).verifyCode(code);
+            @Nested
+            @DisplayName("유효하지 않거나 만료된 인증 코드를 입력했을 때")
+            class Context_with_invalid_or_expired_code {
 
-                // when & then
-                assertThrows(IllegalArgumentException.class,
-                        () -> emailVerificationUseCase.executeVerifyCode(code));
+                @Test
+                @DisplayName("InvalidOrExpiredCodeException을 발생시킨다.")
+                void it_throws_invalid_or_expired_code_exception() {
+                    // given
+                    String invalidCode = "12345678";
+
+                    // when
+                    doThrow(new InvalidOrExpiredCodeException())
+                            .when(emailVerificationService).verifyCode(invalidCode); // doThrow 사용
+
+                    // then
+                    InvalidOrExpiredCodeException exception = assertThrows(InvalidOrExpiredCodeException.class, () -> {
+                        emailVerificationUseCase.executeVerifyCode(invalidCode);
+                    });
+
+                    assertEquals("Invalid or expired", exception.getErrorCode().getMessage());
+                    assertEquals(401, exception.getErrorCode().getHttpStatus());
+                }
             }
-        }
-    }
 
-    @Nested
-    @DisplayName("executeVerifyEmail 메서드는")
-    class Describe_executeVerifyEmail {
+            @Nested
+            @DisplayName("올바르지 않은 형식의 코드를 입력했을 때")
+            class Context_with_invalid_code_format {
 
-        @Nested
-        @DisplayName("유효한 이메일이 제공될 때")
-        class Context_with_valid_email {
+                @Test
+                @DisplayName("InvalidFormatException을 발생시킨다.")
+                void it_throws_invalid_format_exception() {
+                    String invalidCode = "123456";
 
-            @Test
-            @DisplayName("이메일을 검증한다.")
-            void it_verifies_the_email() {
-                // given
-                String email = "test@example.com";
+                    doThrow(new InvalidFormatException())
+                            .when(emailVerificationService).verifyCode(invalidCode);
 
-                // when
-                emailVerificationUseCase.executeVerifyEmail(email);
+                    InvalidFormatException exception = assertThrows(InvalidFormatException.class, () -> {
+                        emailVerificationUseCase.executeVerifyCode(invalidCode);
+                    });
 
-                // then
-                verify(emailVerificationService).verifyEmail(email);
-            }
-        }
-
-        @Nested
-        @DisplayName("유효하지 않은 이메일이 제공될 때")
-        class Context_with_invalid_email {
-
-            @Test
-            @DisplayName("예외를 발생시킨다.")
-            void it_throws_exception() {
-                // given
-                String email = "invalid-email";
-                doThrow(new IllegalArgumentException("Invalid email"))
-                        .when(emailVerificationService).verifyEmail(email);
-
-                // when & then
-                assertThrows(IllegalArgumentException.class,
-                        () -> emailVerificationUseCase.executeVerifyEmail(email));
+                    assertEquals("Invalid format", exception.getErrorCode().getMessage());
+                    assertEquals(400, exception.getErrorCode().getHttpStatus());
+                }
             }
         }
     }
