@@ -1,6 +1,6 @@
 package com.ampersand.groom.domain.auth.application.port;
 
-import com.ampersand.groom.domain.auth.domain.model.EmailVerification;
+import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
