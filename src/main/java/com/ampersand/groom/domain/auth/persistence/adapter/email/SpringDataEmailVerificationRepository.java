@@ -1,12 +1,11 @@
 package com.ampersand.groom.domain.auth.persistence.adapter.email;
 
-import com.ampersand.groom.domain.auth.domain.model.EmailVerification;
+import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -18,7 +17,6 @@ public interface SpringDataEmailVerificationRepository extends JpaRepository<Ema
 
     Optional<EmailVerification> findByEmail(String email);
 
-    @Transactional
     @Modifying
     @Query("DELETE FROM EmailVerification e WHERE e.verificationDate < :now")
     void deleteAllExpired(@Param("now") LocalDateTime now);
