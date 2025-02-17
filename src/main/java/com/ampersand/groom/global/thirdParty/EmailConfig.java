@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.persistence.adapter.email;
+package com.ampersand.groom.global.thirdParty;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

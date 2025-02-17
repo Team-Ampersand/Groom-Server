@@ -1,6 +1,6 @@
-package com.ampersand.groom.domain.auth.persistence;
+package com.ampersand.groom.domain.auth.persistence.repository;
 
-import com.ampersand.groom.domain.auth.persistence.adapter.email.SpringDataEmailVerificationRepository;
+import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

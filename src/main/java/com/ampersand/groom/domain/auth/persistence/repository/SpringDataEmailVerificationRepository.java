@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.persistence.adapter.email;
+package com.ampersand.groom.domain.auth.persistence.repository;
 
 import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 import io.lettuce.core.dynamic.annotation.Param;

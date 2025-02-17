@@ -3,7 +3,7 @@ package com.ampersand.groom.domain.auth.persistence.adapter.email;
 import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
 
 import com.ampersand.groom.domain.auth.persistence.EmailVerification;
-import com.ampersand.groom.domain.auth.persistence.JpaEmailVerificationRepository;
+import com.ampersand.groom.domain.auth.persistence.repository.JpaEmailVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
