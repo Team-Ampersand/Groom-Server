@@ -1,8 +1,9 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
-import com.ampersand.groom.domain.auth.expection.InvalidFormatException;
-import com.ampersand.groom.domain.auth.expection.InvalidOrExpiredCodeException;
+import com.ampersand.groom.domain.auth.expection.EmailFormatInvalidException;
+import com.ampersand.groom.domain.auth.expection.VerificationCodeFormatInvalidException;
+import com.ampersand.groom.domain.auth.expection.VerificationCodeExpiredOrInvalidException;
 import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -63,11 +64,11 @@ public class EmailVerificationService {
     // 인증 코드 검증
     public void verifyCode(String code) {
         if(code == null || code.length() != CODE_LENGTH) {
-            throw new InvalidFormatException();
+            throw new VerificationCodeFormatInvalidException();
         }
 
         EmailVerification emailVerification = emailVerificationPort.findByCode(code)
-                .orElseThrow(InvalidOrExpiredCodeException::new);
+                .orElseThrow(VerificationCodeExpiredOrInvalidException::new);
 
 
         emailVerification.setIsVerified(true);
@@ -77,7 +78,7 @@ public class EmailVerificationService {
     // 이메일 검증
     public void verifyEmail(String email) {
         if(email == null || email.length() != MAX_EMAIL_LENGTH) {
-            throw new InvalidFormatException();
+            throw new EmailFormatInvalidException();
         }
 
     }

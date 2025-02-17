@@ -1,9 +1,9 @@
 package com.ampersand.groom.domain.auth.application.usecase;
 
 import com.ampersand.groom.domain.auth.application.service.EmailVerificationService;
-import com.ampersand.groom.domain.auth.expection.InvalidFormatException;
-import com.ampersand.groom.domain.auth.expection.InvalidOrExpiredCodeException;
-import com.ampersand.groom.domain.auth.application.usecase.EmailVerificationUseCase;
+import com.ampersand.groom.domain.auth.expection.EmailFormatInvalidException;
+import com.ampersand.groom.domain.auth.expection.VerificationCodeFormatInvalidException;
+import com.ampersand.groom.domain.auth.expection.VerificationCodeExpiredOrInvalidException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -57,16 +57,16 @@ class EmailVerificationUseCaseTest {
 
 
                 // when
-                doThrow(new InvalidFormatException())
+                doThrow(new EmailFormatInvalidException())
                         .when(emailVerificationService).sendSignupVerificationEmail(invalidEmail);
 
 
-                InvalidFormatException exception = assertThrows(InvalidFormatException.class, () -> {
+                EmailFormatInvalidException exception = assertThrows(EmailFormatInvalidException.class, () -> {
                     emailVerificationUseCase.executeSendSignupVerificationEmail(invalidEmail); // 이메일 전송 시 예외 발생해야 함
                 });
 
                 // then
-                assertEquals("Invalid format", exception.getErrorCode().getMessage()); // 예외 메시지 확인
+                assertEquals("Email format invalid", exception.getErrorCode().getMessage()); // 예외 메시지 확인
                 assertEquals(400, exception.getErrorCode().getHttpStatus()); // HTTP 상태 코드 확인
             }
 
@@ -105,15 +105,15 @@ class EmailVerificationUseCaseTest {
                     String invalidEmail = "email"; // 잘못된 이메일 주소
 
                     // when
-                    doThrow(new InvalidFormatException())
+                    doThrow(new EmailFormatInvalidException())
                             .when(emailVerificationService).sendPasswordResetEmail(invalidEmail);
 
-                    InvalidFormatException exception = assertThrows(InvalidFormatException.class, () -> {
+                    EmailFormatInvalidException exception = assertThrows(EmailFormatInvalidException.class, () -> {
                         emailVerificationUseCase.executeSendPasswordResetEmail(invalidEmail); // 이메일 전송 시 예외 발생해야 함
                     });
 
                     // then
-                    assertEquals("Invalid format", exception.getErrorCode().getMessage());
+                    assertEquals("Email format invalid", exception.getErrorCode().getMessage());
                     assertEquals(400, exception.getErrorCode().getHttpStatus());
                 }
 
@@ -135,15 +135,15 @@ class EmailVerificationUseCaseTest {
                     String invalidCode = "12345678";
 
                     // when
-                    doThrow(new InvalidOrExpiredCodeException())
+                    doThrow(new VerificationCodeExpiredOrInvalidException())
                             .when(emailVerificationService).verifyCode(invalidCode); // doThrow 사용
 
                     // then
-                    InvalidOrExpiredCodeException exception = assertThrows(InvalidOrExpiredCodeException.class, () -> {
+                    VerificationCodeExpiredOrInvalidException exception = assertThrows(VerificationCodeExpiredOrInvalidException.class, () -> {
                         emailVerificationUseCase.executeVerifyCode(invalidCode);
                     });
 
-                    assertEquals("Invalid or expired", exception.getErrorCode().getMessage());
+                    assertEquals("Verification code expired or invalid", exception.getErrorCode().getMessage());
                     assertEquals(401, exception.getErrorCode().getHttpStatus());
                 }
             }
@@ -157,14 +157,14 @@ class EmailVerificationUseCaseTest {
                 void it_throws_invalid_format_exception() {
                     String invalidCode = "123456";
 
-                    doThrow(new InvalidFormatException())
+                    doThrow(new VerificationCodeFormatInvalidException())
                             .when(emailVerificationService).verifyCode(invalidCode);
 
-                    InvalidFormatException exception = assertThrows(InvalidFormatException.class, () -> {
+                    VerificationCodeFormatInvalidException exception = assertThrows(VerificationCodeFormatInvalidException.class, () -> {
                         emailVerificationUseCase.executeVerifyCode(invalidCode);
                     });
 
-                    assertEquals("Invalid format", exception.getErrorCode().getMessage());
+                    assertEquals("Verification code format invalid", exception.getErrorCode().getMessage());
                     assertEquals(400, exception.getErrorCode().getHttpStatus());
                 }
             }
