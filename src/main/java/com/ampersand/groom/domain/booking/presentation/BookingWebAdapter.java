@@ -1,20 +1,29 @@
 package com.ampersand.groom.domain.booking.presentation;
 
+import com.ampersand.groom.domain.booking.application.port.BookingApplicationPort;
+import com.ampersand.groom.domain.booking.presentation.data.response.GetPlaceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RequestMapping("/api/v1/bookings")
 @RestController
 @RequiredArgsConstructor
 public class BookingWebAdapter {
 
-    // 필요한 의존성을 명시하여 주세요
+    private final BookingApplicationPort bookingApplicationPort;
 
     @GetMapping("/available")
-    public ResponseEntity<?> getAvailableBookings() {
-        return null;  // TODO: 구현
+    public ResponseEntity<List<GetPlaceResponse>> getAvailableBookings(
+            @RequestParam(value = "date") LocalDate date,
+            @RequestParam(value = "time") String time,
+            @RequestParam(value = "placeType",required = false) String placeType
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookingApplicationPort.findPlaceByBookingAvailability(date, time, placeType));
     }
 
     @GetMapping("/information")
