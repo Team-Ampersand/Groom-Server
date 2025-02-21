@@ -14,11 +14,10 @@ import static com.ampersand.groom.domain.member.persistence.entity.QMemberJpaEnt
 
 @Repository
 @RequiredArgsConstructor
-public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
+public class MemberJpaRepositoryCustomImpl implements MemberJpaRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    @Transactional
     @Override
     public void updatePassword(Long id, String newPassword) {
         queryFactory
