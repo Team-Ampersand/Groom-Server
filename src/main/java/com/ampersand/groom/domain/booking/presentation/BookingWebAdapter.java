@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@RequestMapping("/api/v1/bookings")
+@RequestMapping("/api/v1/booking")
 @RestController
 @RequiredArgsConstructor
 public class BookingWebAdapter {
