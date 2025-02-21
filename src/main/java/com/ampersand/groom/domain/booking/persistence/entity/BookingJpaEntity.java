@@ -24,8 +24,11 @@ public class BookingJpaEntity extends BaseIdEntity {
     @JoinColumn(name = "president_id")
     private MemberJpaEntity president;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "place_id", referencedColumnName = "place_id"),
+            @JoinColumn(name = "time_label", referencedColumnName = "time_label")
+    })
     private TimeSlotJpaEntity timeSlot;
 
     @NotNull
