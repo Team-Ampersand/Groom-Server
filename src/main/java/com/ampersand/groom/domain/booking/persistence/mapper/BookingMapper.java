@@ -2,6 +2,7 @@ package com.ampersand.groom.domain.booking.persistence.mapper;
 
 import com.ampersand.groom.domain.booking.domain.Booking;
 import com.ampersand.groom.domain.booking.persistence.entity.BookingJpaEntity;
+import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;
 import com.ampersand.groom.domain.member.persistence.mapper.MemberMapper;
 import com.ampersand.groom.global.mapper.GenericMapper;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,15 @@ public class BookingMapper implements GenericMapper<BookingJpaEntity, Booking> {
                 .timeSlot(timeSlotMapper.toEntity(booking.getTimeSlot()))
                 .bookingDate(booking.getBookingDate())
                 .build();
+    }
+
+    public GetBookingResponse toResponse(Booking booking) {
+        return new GetBookingResponse(
+                booking.getTimeSlot().getPlace().getPlaceName(),
+                booking.getPresident(),
+                booking.getParticipants(),
+                booking.getBookingDate(),
+                booking.getTimeSlot().getTimeSlotId().timeLabel()
+        );
     }
 }
