@@ -1,6 +1,7 @@
 package com.ampersand.groom.domain.booking.presentation;
 
 import com.ampersand.groom.domain.booking.application.port.BookingApplicationPort;
+import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetPlaceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,12 @@ public class BookingWebAdapter {
     }
 
     @GetMapping("/information")
-    public ResponseEntity<?> getBookingInformation() {
-        return null;  // TODO: 구현
+    public ResponseEntity<List<GetBookingResponse>> getBookingInformation(
+            @RequestParam(value = "date") LocalDate date,
+            @RequestParam(value = "time") String time,
+            @RequestParam(value = "placeType") String placeType
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookingApplicationPort.findBookingByDateAndTimeAndPlace(date, time, placeType));
     }
 
     @PostMapping
