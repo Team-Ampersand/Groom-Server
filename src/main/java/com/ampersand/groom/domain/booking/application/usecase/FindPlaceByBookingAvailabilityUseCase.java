@@ -5,12 +5,10 @@ import com.ampersand.groom.domain.booking.persistence.mapper.PlaceMapper;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetPlaceResponse;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithReadOnlyTransaction;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Slf4j
 @UseCaseWithReadOnlyTransaction
 @RequiredArgsConstructor
 public class FindPlaceByBookingAvailabilityUseCase {
