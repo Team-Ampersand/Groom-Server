@@ -7,6 +7,7 @@ import java.util.List;
 
 public record GetBookingResponse(
         String place,
+        Member president,
         List<Member> participants,
         LocalDate date,
         String time
