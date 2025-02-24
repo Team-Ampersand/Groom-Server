@@ -23,4 +23,9 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
                 .map(bookingMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public void saveBooking(Booking booking) {
+        bookingJpaRepository.save(bookingMapper.toEntity(booking));
+    }
 }
