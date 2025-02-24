@@ -4,11 +4,10 @@ import com.ampersand.groom.domain.booking.application.port.BookingPersistencePor
 import com.ampersand.groom.domain.booking.application.port.PlacePersistencePort;
 import com.ampersand.groom.domain.booking.application.port.TimeSlotPersistencePort;
 import com.ampersand.groom.domain.booking.domain.Booking;
-import com.ampersand.groom.domain.booking.domain.Place;
 import com.ampersand.groom.domain.booking.domain.TimeSlot;
 import com.ampersand.groom.domain.booking.exception.DuplicateBookingException;
 import com.ampersand.groom.domain.booking.exception.InvalidBookingParticipantsException;
-import com.ampersand.groom.domain.booking.exception.InvalidBookingTimeException;
+import com.ampersand.groom.domain.booking.exception.InvalidBookingInfomationException;
 import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithTransaction;
@@ -23,16 +22,15 @@ public class CreateBookingUseCase {
 
     private final MemberPersistencePort memberPersistencePort;
     private final BookingPersistencePort bookingPersistencePort;
-    private final PlacePersistencePort placePersistencePort;
     private final TimeSlotPersistencePort timeSlotPersistencePort;
 
     public void execute(String time, String place, List<Long> participants) {
-        Place placeEntity = placePersistencePort.findPlaceByPlaceName(place);
-        List<TimeSlot> availableTimeSlots = timeSlotPersistencePort.findTimeSlotByPlace(placeEntity.getPlaceName());
+        List<TimeSlot> availableTimeSlots = timeSlotPersistencePort.findAllTimeSlots();
         TimeSlot selectedTimeSlot = availableTimeSlots.stream()
+                .filter(timeSlot -> timeSlot.getPlace().getPlaceName().equals(place))
                 .filter(timeSlot -> timeSlot.getTimeSlotId().timeLabel().equals(time))
                 .findAny()
-                .orElseThrow(InvalidBookingTimeException::new);
+                .orElseThrow(InvalidBookingInfomationException::new);
         bookingPersistencePort.findBookingByDateAndTimeAndPlace(LocalDate.now(), selectedTimeSlot.getTimeSlotId().timeLabel(), place)
                 .stream()
                 .findAny()
