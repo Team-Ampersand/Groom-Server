@@ -1,21 +1,18 @@
 package com.ampersand.groom.domain.booking.persistence.repository.custom;
 
 import com.ampersand.groom.domain.booking.persistence.entity.PlaceJpaEntity;
-import com.ampersand.groom.domain.booking.persistence.entity.QBookingJpaEntity;
-import com.ampersand.groom.domain.booking.persistence.entity.QPlaceJpaEntity;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.ampersand.groom.domain.booking.persistence.entity.QPlaceJpaEntity.placeJpaEntity;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class PlaceJpaRepositoryCustomImpl implements PlaceJpaRepositoryCustom {
@@ -37,5 +34,15 @@ public class PlaceJpaRepositoryCustomImpl implements PlaceJpaRepositoryCustom {
                         Objects.nonNull(placeType) ? placeJpaEntity.placeName.startsWith(placeType) : null
                 )
                 .fetch();
+    }
+
+    @Override
+    public Optional<PlaceJpaEntity> findPlaceByPlaceName(String placeName) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(placeJpaEntity)
+                        .where(placeJpaEntity.placeName.eq(placeName))
+                        .fetchOne()
+        );
     }
 }
