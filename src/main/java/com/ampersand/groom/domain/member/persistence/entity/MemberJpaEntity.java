@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "member")
+@AttributeOverride(name = "id", column = @Column(name = "member_id"))
 public class MemberJpaEntity extends BaseIdEntity {
     @Column(nullable = false, length = 10)
     private String name;
