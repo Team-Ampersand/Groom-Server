@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Setter
 public class TimeSlotJpaEntityId implements Serializable {
     @Column(name = "place_id")
-    private Integer placeId;
+    private Long placeId;
 
     @Column(name = "time_label")
     private String timeLabel;
