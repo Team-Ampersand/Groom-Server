@@ -12,5 +12,7 @@ public interface MemberPersistencePort {
 
     Member findMemberById(Long id);
 
+    List<Member> findMembersByIds(List<Long> ids);
+
     void updateMemberPassword(Long id, String newPassword);
 }

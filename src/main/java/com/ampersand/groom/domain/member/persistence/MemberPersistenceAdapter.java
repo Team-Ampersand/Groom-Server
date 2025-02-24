@@ -41,6 +41,13 @@ public class MemberPersistenceAdapter implements MemberPersistencePort {
     }
 
     @Override
+    public List<Member> findMembersByIds(List<Long> ids) {
+        return memberJpaRepository.findMembersByIds(ids).stream()
+                .map(memberMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public void updateMemberPassword(Long id, String newPassword) {
         memberJpaRepository.updatePassword(id, newPassword);
     }

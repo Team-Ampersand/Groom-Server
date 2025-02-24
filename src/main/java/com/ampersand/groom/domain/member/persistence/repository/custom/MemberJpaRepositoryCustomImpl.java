@@ -28,6 +28,14 @@ public class MemberJpaRepositoryCustomImpl implements MemberJpaRepositoryCustom 
     }
 
     @Override
+    public List<MemberJpaEntity> findMembersByIds(List<Long> ids) {
+        return queryFactory
+                .selectFrom(memberJpaEntity)
+                .where(memberJpaEntity.id.in(ids))
+                .fetch();
+    }
+
+    @Override
     public List<MemberJpaEntity> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
         return queryFactory
                 .selectFrom(memberJpaEntity)
