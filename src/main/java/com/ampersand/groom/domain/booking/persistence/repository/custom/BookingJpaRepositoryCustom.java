@@ -6,6 +6,5 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BookingJpaRepositoryCustom {
-
     List<BookingJpaEntity> findBookingByDateAndTimeAndPlace(LocalDate date, String time, String placeType);
 }

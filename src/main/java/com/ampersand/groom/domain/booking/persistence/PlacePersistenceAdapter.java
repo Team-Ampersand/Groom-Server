@@ -2,7 +2,6 @@ package com.ampersand.groom.domain.booking.persistence;
 
 import com.ampersand.groom.domain.booking.application.port.PlacePersistencePort;
 import com.ampersand.groom.domain.booking.domain.Place;
-import com.ampersand.groom.domain.booking.exception.PlaceNotFoundException;
 import com.ampersand.groom.domain.booking.persistence.mapper.PlaceMapper;
 import com.ampersand.groom.domain.booking.persistence.repository.PlaceJpaRepository;
 import com.ampersand.groom.global.annotation.adapter.Adapter;
@@ -24,11 +23,5 @@ public class PlacePersistenceAdapter implements PlacePersistencePort {
         return placeJpaRepository.findPlaceByBookingAvailability(date, time, placeType).stream()
                 .map(placeMapper::toDomain)
                 .toList();
-    }
-
-    @Override
-    public Place findPlaceByPlaceName(String placeName) {
-        return placeMapper.toDomain(placeJpaRepository.findPlaceByPlaceName(placeName)
-                .orElseThrow(PlaceNotFoundException::new));
     }
 }

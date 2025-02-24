@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface PlacePersistencePort {
     List<Place> findPlaceByBookingAvailability(LocalDate date, String time, String placeType);
-
-    Place findPlaceByPlaceName(String placeName);
 }
