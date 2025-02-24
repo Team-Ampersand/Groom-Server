@@ -12,12 +12,9 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND("Member not found", 404),
 
     // BOOKING
-    INVALID_BOOKING_TIME("Invalid booking time", 400),
     INVALID_BOOKING_PARTICIPANTS("Invalid booking participants", 400),
+    INVALID_BOOKING_INFORMATION("Invalid booking information", 400),
     DUPLICATE_BOOKING("Duplicate booking", 409),
-
-    // PLACE
-    PLACE_NOT_FOUND("Place not found", 404),
 
     // EMAIL AUTHENTICATION
     VERIFICATION_CODE_EXPIRED_OR_INVALID("Verification code expired or invalid", 401),
