@@ -31,7 +31,7 @@ public class BookingWebAdapter {
     public ResponseEntity<List<GetBookingResponse>> getBookingInformation(
             @RequestParam(value = "date") LocalDate date,
             @RequestParam(value = "time") String time,
-            @RequestParam(value = "placeType") String placeType
+            @RequestParam(value = "placeType", required = false) String placeType
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(bookingApplicationPort.findBookingByDateAndTimeAndPlace(date, time, placeType));
     }
