@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@Setter
 @Entity
 @Table(name = "booking")
 @AttributeOverride(name = "id", column = @Column(name = "booking_id", nullable = false))
