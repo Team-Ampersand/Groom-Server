@@ -5,5 +5,5 @@ import com.ampersand.groom.domain.booking.domain.TimeSlot;
 import java.util.List;
 
 public interface TimeSlotPersistencePort {
-    List<TimeSlot> findTimeSlotByPlace(String place);
+    List<TimeSlot> findAllTimeSlots();
 }

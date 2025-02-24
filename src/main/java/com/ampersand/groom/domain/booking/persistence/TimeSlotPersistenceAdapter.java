@@ -7,6 +7,7 @@ import com.ampersand.groom.domain.booking.persistence.repository.TimeSlotJpaRepo
 import com.ampersand.groom.global.annotation.adapter.Adapter;
 import com.ampersand.groom.global.annotation.adapter.constant.AdapterType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -18,8 +19,9 @@ public class TimeSlotPersistenceAdapter implements TimeSlotPersistencePort {
     private final TimeSlotMapper timeSlotMapper;
 
     @Override
-    public List<TimeSlot> findTimeSlotByPlace(String place) {
-        return timeSlotJpaRepository.findTimeSlotsByPlace(place).stream()
+    @Cacheable(value = "timeSlots")
+    public List<TimeSlot> findAllTimeSlots() {
+        return timeSlotJpaRepository.findAll().stream()
                 .map(timeSlotMapper::toDomain)
                 .toList();
     }
