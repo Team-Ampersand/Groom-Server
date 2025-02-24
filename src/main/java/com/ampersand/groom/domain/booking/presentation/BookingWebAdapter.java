@@ -3,6 +3,8 @@ package com.ampersand.groom.domain.booking.presentation;
 import com.ampersand.groom.domain.booking.application.port.BookingApplicationPort;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetPlaceResponse;
+import com.ampersand.groom.domain.booking.presentation.data.request.CreateBookingRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +39,9 @@ public class BookingWebAdapter {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBooking() {
-        return null;  // TODO: 구현
+    public ResponseEntity<Void> createBooking(@Valid @RequestBody CreateBookingRequest request) {
+        bookingApplicationPort.createBooking(request.time(), request.place(), request.participants());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping
