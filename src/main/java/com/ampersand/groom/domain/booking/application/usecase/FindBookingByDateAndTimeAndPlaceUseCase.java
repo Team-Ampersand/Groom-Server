@@ -1,6 +1,5 @@
 package com.ampersand.groom.domain.booking.application.usecase;
 
-import com.ampersand.groom.domain.booking.application.BookingApplicationAdapter;
 import com.ampersand.groom.domain.booking.persistence.BookingPersistenceAdapter;
 import com.ampersand.groom.domain.booking.persistence.mapper.BookingMapper;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;

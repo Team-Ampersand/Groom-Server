@@ -1,7 +1,6 @@
 package com.ampersand.groom.domain.booking.application.usecase;
 
 import com.ampersand.groom.domain.booking.application.port.BookingPersistencePort;
-import com.ampersand.groom.domain.booking.application.port.PlacePersistencePort;
 import com.ampersand.groom.domain.booking.application.port.TimeSlotPersistencePort;
 import com.ampersand.groom.domain.booking.domain.Booking;
 import com.ampersand.groom.domain.booking.domain.TimeSlot;
