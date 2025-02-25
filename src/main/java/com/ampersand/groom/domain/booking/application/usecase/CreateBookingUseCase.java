@@ -8,6 +8,7 @@ import com.ampersand.groom.domain.booking.domain.TimeSlot;
 import com.ampersand.groom.domain.booking.exception.DuplicateBookingException;
 import com.ampersand.groom.domain.booking.exception.InvalidBookingParticipantsException;
 import com.ampersand.groom.domain.booking.exception.InvalidBookingInfomationException;
+import com.ampersand.groom.domain.booking.exception.MaxCapacityExceededException;
 import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithTransaction;
@@ -31,6 +32,9 @@ public class CreateBookingUseCase {
                 .filter(timeSlot -> timeSlot.getTimeSlotId().timeLabel().equals(time))
                 .findAny()
                 .orElseThrow(InvalidBookingInfomationException::new);
+        if(selectedTimeSlot.getPlace().getMaxCapacity() < participants.size() + 1) {
+            throw new MaxCapacityExceededException();
+        }
         bookingPersistencePort.findBookingByDateAndTimeAndPlace(LocalDate.now(), selectedTimeSlot.getTimeSlotId().timeLabel(), place)
                 .stream()
                 .findAny()
