@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.presentation.dto;
+package com.ampersand.groom.domain.auth.presentation.data.Request;
 
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
