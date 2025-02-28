@@ -20,13 +20,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthPort authPort;
 
+    @Value("${spring.jwt.token.access-expiration}")
+    private long accessTokenExpiration;
+
     @Value("${spring.jwt.token.refresh-expiration}")
     private long refreshTokenExpiration;
 
+
     private static final int PASSWORD_MAX_LENGTH = 30;
+    private static final int EMAIL_MAX_LENGTH = 16;
 
     public JwtToken signIn(String email, String password) {
-        if (email == null || password == null || email.isEmpty() || password.isEmpty() || password.length() > PASSWORD_MAX_LENGTH) {
+        if (email == null || password == null || email.isEmpty() || password.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.length() > PASSWORD_MAX_LENGTH) {
             throw new EmailOrPasswordEmptyException();
         }
 
@@ -47,7 +52,7 @@ public class AuthService {
         return JwtToken.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpiration(Instant.now().plusMillis(jwtService.getAccessTokenExpiration()))
+                .accessTokenExpiration(Instant.now().plusMillis(accessTokenExpiration))
                 .refreshTokenExpiration(Instant.now().plusMillis(refreshTokenExpiration))
                 .role(user.getRole())
                 .build();
@@ -55,7 +60,7 @@ public class AuthService {
 
     public JwtToken refreshToken(String refreshToken) {
         if (refreshToken == null || refreshToken.isEmpty()) {
-            throw new ReFreshTokenRequestFormatInvalidException();
+            throw new RefreshTokenRequestFormatInvalidException();
         }
 
         if (!jwtService.validateToken(refreshToken)) {
@@ -72,7 +77,7 @@ public class AuthService {
         return JwtToken.builder()
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .accessTokenExpiration(Instant.now().plusMillis(jwtService.getAccessTokenExpiration()))
+                .accessTokenExpiration(Instant.now().plusMillis(accessTokenExpiration))
                 .refreshTokenExpiration(Instant.now().plusMillis(refreshTokenExpiration))
                 .role(user.getRole())
                 .build();
