@@ -5,7 +5,6 @@ import com.ampersand.groom.domain.auth.domain.JwtToken;
 import com.ampersand.groom.domain.auth.expection.*;
 import com.ampersand.groom.domain.auth.presentation.data.Request.SignupRequest;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
-import com.ampersand.groom.domain.member.persistence.repository.MemberJpaRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -187,10 +186,10 @@ class AuthUseCaseTest {
             void it_throws_refresh_token_request_format_invalid_exception() {
                 // given
                 String refreshToken = "";
-                when(authService.refreshToken(refreshToken)).thenThrow(new ReFreshTokenRequestFormatInvalidException());
+                when(authService.refreshToken(refreshToken)).thenThrow(new RefreshTokenRequestFormatInvalidException());
 
                 // when & then
-                assertThrows(ReFreshTokenRequestFormatInvalidException.class, () -> authUseCase.executeRefreshToken(refreshToken));
+                assertThrows(RefreshTokenRequestFormatInvalidException.class, () -> authUseCase.executeRefreshToken(refreshToken));
             }
         }
     }
