@@ -47,7 +47,7 @@ jobs:
       - name: 🐋 Docker Run
         run: docker-compose -f docker-compose.test.yml up -d
       - name: ⌛ Wait for Application
-        run: sleep 30
+        run: sleep 60
       - name: 🧪 Test Application
         run: |
           RESPONSE=$(curl -s "http://127.0.0.1:8080${{ secrets.HEALTH_CHECK_PATH }}")
