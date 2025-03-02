@@ -2,6 +2,7 @@ package com.ampersand.groom.global.security.config;
 
 import com.ampersand.groom.domain.auth.application.service.CustomUserDetailsService;
 import com.ampersand.groom.domain.auth.application.service.JwtService;
+import com.ampersand.groom.domain.auth.expection.UserNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,9 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtService.validateToken(token)) {
             String email = jwtService.getEmailFromToken(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (userDetails != null) {
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                throw new UserNotFoundException();
+            }
+
         }
         filterChain.doFilter(request, response);
     }
