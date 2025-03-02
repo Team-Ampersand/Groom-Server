@@ -26,7 +26,7 @@ public class JwtService {
 
     public String createRefreshToken(String email) {
         String refreshToken = generateToken(email, refreshTokenExpiration);
-        redisTemplate.opsForHash().delete("refresh_token", refreshToken);
+        redisTemplate.opsForHash().delete("refresh_token", email);
         redisTemplate.opsForHash().put("refresh_token", email, refreshToken);
         return refreshToken;
     }
