@@ -26,14 +26,7 @@ public class AuthService {
     @Value("${spring.jwt.token.refresh-expiration}")
     private long refreshTokenExpiration;
 
-
-    private static final int PASSWORD_MAX_LENGTH = 30;
-    private static final int EMAIL_MAX_LENGTH = 16;
-
     public JwtToken signIn(String email, String password) {
-        if (email == null || password == null || email.isEmpty() || password.isEmpty() || email.length() > EMAIL_MAX_LENGTH || password.length() > PASSWORD_MAX_LENGTH) {
-            throw new EmailOrPasswordEmptyException();
-        }
 
         MemberJpaEntity user = authPort.findByEmail(email)
                 .orElseThrow(()->new UserNotFoundException());
