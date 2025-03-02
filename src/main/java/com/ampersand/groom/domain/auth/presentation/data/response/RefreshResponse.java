@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.presentation.data.Response;
+package com.ampersand.groom.domain.auth.presentation.data.response;
 
 import java.time.LocalDateTime;
 

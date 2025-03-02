@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.presentation.data.Request;
+package com.ampersand.groom.domain.auth.presentation.data.request;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

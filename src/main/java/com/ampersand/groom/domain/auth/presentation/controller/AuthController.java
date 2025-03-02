@@ -3,7 +3,7 @@ package com.ampersand.groom.domain.auth.presentation.controller;
 import com.ampersand.groom.domain.auth.application.usecase.AuthUseCase;
 import com.ampersand.groom.domain.auth.application.usecase.EmailVerificationUseCase;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
-import com.ampersand.groom.domain.auth.presentation.data.Request.*;
+import com.ampersand.groom.domain.auth.presentation.data.request.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

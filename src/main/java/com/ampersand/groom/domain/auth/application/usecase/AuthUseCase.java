@@ -2,7 +2,7 @@ package com.ampersand.groom.domain.auth.application.usecase;
 
 import com.ampersand.groom.domain.auth.application.service.AuthService;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
-import com.ampersand.groom.domain.auth.presentation.data.Request.SignupRequest;
+import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithTransaction;
 import lombok.RequiredArgsConstructor;
 
