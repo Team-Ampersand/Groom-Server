@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface AuthPort {
 
-    Optional<MemberJpaEntity> findByEmail(String email);
+    Optional<MemberJpaEntity> findMembersByCriteria(String email);
 
     void save(MemberJpaEntity member);
 }

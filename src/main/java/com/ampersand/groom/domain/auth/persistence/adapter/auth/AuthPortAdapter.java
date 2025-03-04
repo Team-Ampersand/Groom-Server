@@ -15,11 +15,11 @@ public class AuthPortAdapter implements AuthPort {
     private final MemberJpaRepository memberJpaRepository;
 
     @Override
-    public Optional<MemberJpaEntity> findByEmail(String email) {
-        return memberJpaRepository.findAll().stream()
-                .filter(member -> member.getEmail().equals(email))
-                .findFirst();
+    public Optional<MemberJpaEntity> findMembersByCriteria(String email) {
+        return memberJpaRepository.findMembersByCriteria(null, null, null, email, null, null)
+                .stream().findFirst();
     }
+
 
     @Override
     public void save(MemberJpaEntity member) {
