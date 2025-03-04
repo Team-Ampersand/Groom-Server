@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        return authPort.findByEmail(email)
+        return authPort.findMembersByCriteria(email)
                 .map(member -> {
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority(member.getRole().name());
                     return new User(member.getEmail(), member.getPassword(), Collections.singletonList(authority));

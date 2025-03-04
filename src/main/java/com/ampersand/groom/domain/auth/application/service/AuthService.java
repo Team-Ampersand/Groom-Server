@@ -28,7 +28,7 @@ public class AuthService {
 
     public JwtToken signIn(String email, String password) {
 
-        MemberJpaEntity user = authPort.findByEmail(email)
+        MemberJpaEntity user = authPort.findMembersByCriteria(email)
                 .orElseThrow(()->new UserNotFoundException());
 
         if(!user.getIsAvailable()) {
@@ -56,12 +56,17 @@ public class AuthService {
             throw new RefreshTokenRequestFormatInvalidException();
         }
 
+        String email = jwtService.getEmailFromToken(refreshToken);
+        if(!jwtService.isRefreshTokenValid(email, refreshToken)) {
+            throw new RefreshTokenExpiredOrInvalidException();
+        }
+
+
         if (!jwtService.validateToken(refreshToken)) {
             throw new RefreshTokenExpiredOrInvalidException();
         }
 
-        String email = jwtService.getEmailFromToken(refreshToken);
-        MemberJpaEntity user = authPort.findByEmail(email)
+        MemberJpaEntity user = authPort.findMembersByCriteria(email)
                 .orElseThrow(()->new UserNotFoundException());
 
         String newAccessToken = jwtService.createAccessToken(email);
@@ -77,7 +82,7 @@ public class AuthService {
     }
 
     public void signup(SignupRequest request) {
-        authPort.findByEmail(request.getEmail())
+        authPort.findMembersByCriteria(request.getEmail())
                 .ifPresent(emailVerification -> {
                     throw new UserExistException();
                 });
