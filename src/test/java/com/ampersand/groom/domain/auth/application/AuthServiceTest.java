@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.application.usecase;
+package com.ampersand.groom.domain.auth.application;
 
 import com.ampersand.groom.domain.auth.application.service.AuthService;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
@@ -7,7 +7,6 @@ import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -17,18 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("AuthUseCase 클래스의")
-class AuthUseCaseTest {
+@DisplayName("AuthService 클래스의")
+class AuthServiceTest {
 
     @Mock
     private AuthService authService;
 
-    @InjectMocks
-    private AuthUseCase authUseCase;
-
-    @DisplayName("executeSignIn 메서드는")
+    @DisplayName("signIn 메서드는")
     @Nested
-    class Describe_executeSignIn {
+    class Describe_signIn {
 
         @Nested
         @DisplayName("정상적인 로그인 시")
@@ -50,7 +46,7 @@ class AuthUseCaseTest {
                 when(authService.signIn(email, password)).thenReturn(validToken);
 
                 // when
-                JwtToken result = authUseCase.executeSignIn(email, password);
+                JwtToken result = authService.signIn(email, password);
 
                 // then
                 verify(authService).signIn(email, password);
@@ -72,7 +68,7 @@ class AuthUseCaseTest {
                 when(authService.signIn(email, password)).thenThrow(new PasswordInvalidException());
 
                 // when & then
-                assertThrows(PasswordInvalidException.class, () -> authUseCase.executeSignIn(email, password));
+                assertThrows(PasswordInvalidException.class, () -> authService.signIn(email, password));
             }
 
             @Test
@@ -84,14 +80,14 @@ class AuthUseCaseTest {
                 when(authService.signIn(email, password)).thenThrow(new UserNotFoundException());
 
                 // when & then
-                assertThrows(UserNotFoundException.class, () -> authUseCase.executeSignIn(email, password));
+                assertThrows(UserNotFoundException.class, () -> authService.signIn(email, password));
             }
         }
     }
 
-    @DisplayName("executeSignup 메서드는")
+    @DisplayName("signup 메서드는")
     @Nested
-    class Describe_executeSignup {
+    class Describe_signup {
 
         @Nested
         @DisplayName("정상적인 회원가입 시")
@@ -105,7 +101,7 @@ class AuthUseCaseTest {
                 doNothing().when(authService).signup(signupRequest);
 
                 // when
-                assertDoesNotThrow(() -> authUseCase.executeSignup(signupRequest));
+                assertDoesNotThrow(() -> authService.signup(signupRequest));
 
                 // then
                 verify(authService).signup(signupRequest);
@@ -124,14 +120,14 @@ class AuthUseCaseTest {
                 doThrow(new UserExistException()).when(authService).signup(signupRequest);
 
                 // when & then
-                assertThrows(UserExistException.class, () -> authUseCase.executeSignup(signupRequest));
+                assertThrows(UserExistException.class, () -> authService.signup(signupRequest));
             }
         }
     }
 
-    @DisplayName("executeRefreshToken 메서드는")
+    @DisplayName("refreshToken 메서드는")
     @Nested
-    class Describe_executeRefreshToken {
+    class Describe_refreshToken {
 
         @Nested
         @DisplayName("정상적인 리프레시 토큰")
@@ -152,7 +148,7 @@ class AuthUseCaseTest {
                 when(authService.refreshToken(refreshToken)).thenReturn(validToken);
 
                 // when
-                JwtToken result = authUseCase.executeRefreshToken(refreshToken);
+                JwtToken result = authService.refreshToken(refreshToken);
 
                 // then
                 verify(authService).refreshToken(refreshToken);
@@ -173,7 +169,7 @@ class AuthUseCaseTest {
                 when(authService.refreshToken(refreshToken)).thenThrow(new RefreshTokenExpiredOrInvalidException());
 
                 // when & then
-                assertThrows(RefreshTokenExpiredOrInvalidException.class, () -> authUseCase.executeRefreshToken(refreshToken));
+                assertThrows(RefreshTokenExpiredOrInvalidException.class, () -> authService.refreshToken(refreshToken));
             }
         }
 
@@ -182,14 +178,14 @@ class AuthUseCaseTest {
         class Context_with_empty_refresh_token {
 
             @Test
-            @DisplayName("ReFreshTokenRequestFormatInvalidException을 던진다.")
+            @DisplayName("RefreshTokenRequestFormatInvalidException을 던진다.")
             void it_throws_refresh_token_request_format_invalid_exception() {
                 // given
                 String refreshToken = "";
                 when(authService.refreshToken(refreshToken)).thenThrow(new RefreshTokenRequestFormatInvalidException());
 
                 // when & then
-                assertThrows(RefreshTokenRequestFormatInvalidException.class, () -> authUseCase.executeRefreshToken(refreshToken));
+                assertThrows(RefreshTokenRequestFormatInvalidException.class, () -> authService.refreshToken(refreshToken));
             }
         }
     }
