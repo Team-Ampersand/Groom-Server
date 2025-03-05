@@ -1,6 +1,6 @@
 package com.ampersand.groom.domain.auth.presentation.controller;
 
-import com.ampersand.groom.domain.auth.application.usecase.AuthUseCase;
+import com.ampersand.groom.domain.auth.application.service.AuthService;
 import com.ampersand.groom.domain.auth.application.usecase.EmailVerificationUseCase;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
 import com.ampersand.groom.domain.auth.presentation.data.request.*;
@@ -16,23 +16,23 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final EmailVerificationUseCase emailVerificationUseCase;
-    private final AuthUseCase authUseCase;
+    private final AuthService authService;
 
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request) {
-       JwtToken jwtToken = authUseCase.executeSignIn(request.getEmail(), request.getPassword());
+       JwtToken jwtToken = authService.signIn(request.getEmail(), request.getPassword());
        return ResponseEntity.ok(jwtToken);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody @Valid SignupRequest request) {
-        authUseCase.executeSignup(request);
+        authService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("Signup successful");
     }
 
     @PatchMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody @Valid RefreshRequest request) {
-        JwtToken jwtToken = authUseCase.executeRefreshToken(request.getRefreshToken());
+        JwtToken jwtToken = authService.refreshToken(request.getRefreshToken());
         return ResponseEntity.ok(jwtToken);
     }
 
