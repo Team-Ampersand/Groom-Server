@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +27,19 @@ public class JwtService {
 
     public String createRefreshToken(String email) {
         String refreshToken = generateToken(email, refreshTokenExpiration);
-        redisTemplate.opsForHash().delete("refresh_token", email);
-        redisTemplate.opsForHash().put("refresh_token", email, refreshToken);
+
+        redisTemplate.opsForValue().set("refresh_token:" + email, refreshToken, refreshTokenExpiration, TimeUnit.SECONDS);
+
         return refreshToken;
+    }
+
+    public boolean refreshToken(String email, String refreshToken) {
+        String storedToken = redisTemplate.opsForValue().get("refresh_token:" + email);
+
+        if (storedToken == null || !storedToken.equals(refreshToken)) {
+            return false;
+        }
+        return true;
     }
 
     private String generateToken(String subject, long expirationMs) {

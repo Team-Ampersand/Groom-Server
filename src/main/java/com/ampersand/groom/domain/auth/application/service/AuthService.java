@@ -57,10 +57,10 @@ public class AuthService {
         }
 
         String email = jwtService.getEmailFromToken(refreshToken);
-        if(!jwtService.isRefreshTokenValid(email, refreshToken)) {
+        boolean isTokenValid = jwtService.refreshToken(email, refreshToken);
+        if (!isTokenValid) {
             throw new RefreshTokenExpiredOrInvalidException();
         }
-
 
         if (!jwtService.validateToken(refreshToken)) {
             throw new RefreshTokenExpiredOrInvalidException();
