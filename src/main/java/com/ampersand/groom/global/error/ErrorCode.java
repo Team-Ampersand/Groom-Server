@@ -20,7 +20,16 @@ public enum ErrorCode {
     // EMAIL AUTHENTICATION
     VERIFICATION_CODE_EXPIRED_OR_INVALID("Verification code expired or invalid", 401),
     EMAIL_FORMAT_INVALID("Email format invalid", 400),
-    VERIFICATION_CODE_FORMAT_INVALID("Verification code format invalid", 400);
+    VERIFICATION_CODE_FORMAT_INVALID("Verification code format invalid", 400),
+
+    PASSWORD_INVALID("Password invalid", 401),
+    USER_ALREADY_EXISTS("User already exists", 409),
+    USER_NOT_FOUND("User not found", 404),
+    USER_FORBIDDEN("Email verification is not complete", 403),
+    EMAIL_OR_PASSWORD_EMPTY("email or password is empty", 400),
+    REFRESH_TOKEN_EXPIRED_OR_INVALID("Refresh token expired or invalid", 401),
+    REFRESH_TOKEN_REQUEST_FORMAT_INVALID("Refresh token request format invalid", 400);
+
 
     private final String message;
     private final int httpStatus;
