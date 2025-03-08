@@ -34,6 +34,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/auth/**").permitAll()  // TODO: 추후 리팩터링 시 클래스를 분리하거나 새부적이고 통일된 접근 권한 설정이 요할 것 같습니다
                                 .requestMatchers("/api/v1/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_TEACHER", "ROLE_ADMIN")
+                                .requestMatchers("/").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
