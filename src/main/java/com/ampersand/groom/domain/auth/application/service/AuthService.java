@@ -1,9 +1,10 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.AuthPort;
-import com.ampersand.groom.domain.auth.expection.*;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
+import com.ampersand.groom.domain.auth.expection.*;
 import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
+import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import com.ampersand.groom.domain.member.persistence.entity.MemberJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +30,9 @@ public class AuthService {
     public JwtToken signIn(String email, String password) {
 
         MemberJpaEntity user = authPort.findMembersByCriteria(email)
-                .orElseThrow(()->new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException());
 
-        if(!user.getIsAvailable()) {
+        if (!user.getIsAvailable()) {
             throw new UserForbiddenException();
         }
 
@@ -39,8 +40,8 @@ public class AuthService {
             throw new PasswordInvalidException();
         }
 
-        String accessToken = jwtService.createAccessToken(email);
-        String refreshToken = jwtService.createRefreshToken(email);
+        String accessToken = jwtService.createAccessToken(email, user.getRole());
+        String refreshToken = jwtService.createRefreshToken(email, user.getRole());
 
         return JwtToken.builder()
                 .accessToken(accessToken)
@@ -67,10 +68,10 @@ public class AuthService {
         }
 
         MemberJpaEntity user = authPort.findMembersByCriteria(email)
-                .orElseThrow(()->new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException());
 
-        String newAccessToken = jwtService.createAccessToken(email);
-        String newRefreshToken = jwtService.createRefreshToken(email);
+        String newAccessToken = jwtService.createAccessToken(email, user.getRole());
+        String newRefreshToken = jwtService.createRefreshToken(email, user.getRole());
 
         return JwtToken.builder()
                 .accessToken(newAccessToken)
@@ -93,6 +94,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .generation(1)
                 .isAvailable(true)
+                .role(MemberRole.ROLE_STUDENT)
                 .build();
 
         authPort.save(newUser);
