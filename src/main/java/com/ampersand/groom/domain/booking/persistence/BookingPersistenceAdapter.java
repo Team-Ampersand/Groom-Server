@@ -2,6 +2,7 @@ package com.ampersand.groom.domain.booking.persistence;
 
 import com.ampersand.groom.domain.booking.application.port.BookingPersistencePort;
 import com.ampersand.groom.domain.booking.domain.Booking;
+import com.ampersand.groom.domain.booking.exception.BookingNotFoundException;
 import com.ampersand.groom.domain.booking.persistence.mapper.BookingMapper;
 import com.ampersand.groom.domain.booking.persistence.repository.BookingJpaRepository;
 import com.ampersand.groom.global.annotation.adapter.Adapter;
@@ -26,7 +27,7 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
 
     @Override
     public Booking findBookingByIdWithLock(Long bookingId) {
-        return bookingMapper.toDomain(bookingJpaRepository.findByIdWithLock(bookingId));
+        return bookingMapper.toDomain(bookingJpaRepository.findByIdWithLock(bookingId).orElseThrow(BookingNotFoundException::new));
     }
 
     @Override

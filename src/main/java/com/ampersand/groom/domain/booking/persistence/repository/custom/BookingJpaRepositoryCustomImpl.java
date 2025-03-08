@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static com.ampersand.groom.domain.booking.persistence.entity.QBookingJpaEntity.bookingJpaEntity;
 
@@ -28,12 +29,14 @@ public class BookingJpaRepositoryCustomImpl implements BookingJpaRepositoryCusto
     }
 
     @Override
-    public BookingJpaEntity findByIdWithLock(Long bookingId) {
-        return queryFactory
-                .selectFrom(bookingJpaEntity)
-                .where(bookingJpaEntity.id.eq(bookingId))
-                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-                .fetchOne();
+    public Optional<BookingJpaEntity> findByIdWithLock(Long bookingId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(bookingJpaEntity)
+                        .where(bookingJpaEntity.id.eq(bookingId))
+                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                        .fetchOne()
+        );
     }
 
     @Override
