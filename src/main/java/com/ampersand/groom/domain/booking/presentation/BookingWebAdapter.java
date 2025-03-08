@@ -3,7 +3,7 @@ package com.ampersand.groom.domain.booking.presentation;
 import com.ampersand.groom.domain.booking.application.port.BookingApplicationPort;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetPlaceResponse;
-import com.ampersand.groom.domain.booking.presentation.data.request.CreateBookingRequest;
+import com.ampersand.groom.domain.booking.presentation.data.request.CommandBookingRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,14 +39,18 @@ public class BookingWebAdapter {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createBooking(@Valid @RequestBody CreateBookingRequest request) {
+    public ResponseEntity<Void> createBooking(@Valid @RequestBody CommandBookingRequest request) {
         bookingApplicationPort.createBooking(request.time(), request.place(), request.participants());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PatchMapping
-    public ResponseEntity<?> updateBooking() {
-        return null;  // TODO: 구현
+    @PutMapping("/{bookingId}")
+    public ResponseEntity<?> updateBooking(
+            @PathVariable(value = "bookingId") Long bookingId,
+            @Valid @RequestBody CommandBookingRequest request
+    ) {
+        bookingApplicationPort.updateBooking(bookingId, request.time(), request.place(), request.participants());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping

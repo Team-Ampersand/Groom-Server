@@ -4,6 +4,7 @@ import com.ampersand.groom.domain.booking.application.port.BookingApplicationPor
 import com.ampersand.groom.domain.booking.application.usecase.CreateBookingUseCase;
 import com.ampersand.groom.domain.booking.application.usecase.FindBookingByDateAndTimeAndPlaceUseCase;
 import com.ampersand.groom.domain.booking.application.usecase.FindPlaceByBookingAvailabilityUseCase;
+import com.ampersand.groom.domain.booking.application.usecase.UpdateBookingUseCase;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetPlaceResponse;
 import com.ampersand.groom.global.annotation.adapter.Adapter;
@@ -20,6 +21,7 @@ public class BookingApplicationAdapter implements BookingApplicationPort {
     private final FindPlaceByBookingAvailabilityUseCase findPlaceByBookingAvailabilityUseCase;
     private final FindBookingByDateAndTimeAndPlaceUseCase findBookingByDateAndTimeAndPlaceUseCase;
     private final CreateBookingUseCase createBookingUseCase;
+    private final UpdateBookingUseCase updateBookingUseCase;
 
     @Override
     public List<GetPlaceResponse> findPlaceByBookingAvailability(LocalDate date, String time, String placeType) {
@@ -38,7 +40,7 @@ public class BookingApplicationAdapter implements BookingApplicationPort {
 
     @Override
     public void updateBooking(Long id, String time, String place, List<Long> participants) {
-
+        updateBookingUseCase.execute(id, time, place, participants);
     }
 
     @Override
