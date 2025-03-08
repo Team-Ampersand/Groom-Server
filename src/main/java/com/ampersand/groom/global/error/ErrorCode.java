@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_BOOKING_INFORMATION("Invalid booking information", 400),
     DUPLICATE_BOOKING("Duplicate booking", 409),
     MAX_CAPACITY_EXCEEDED("Max capacity exceeded", 400),
+    NOT_BOOKING_PRESIDENT("Not booking president", 403),
 
     // EMAIL AUTHENTICATION
     VERIFICATION_CODE_EXPIRED_OR_INVALID("Verification code expired or invalid", 401),
