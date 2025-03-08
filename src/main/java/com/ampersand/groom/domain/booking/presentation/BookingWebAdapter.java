@@ -45,7 +45,7 @@ public class BookingWebAdapter {
     }
 
     @PutMapping("/{bookingId}")
-    public ResponseEntity<?> updateBooking(
+    public ResponseEntity<Void> updateBooking(
             @PathVariable(value = "bookingId") Long bookingId,
             @Valid @RequestBody CommandBookingRequest request
     ) {
