@@ -14,4 +14,6 @@ public interface BookingPersistencePort {
     Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place);
 
     void saveBooking(Booking booking);
+
+    void deleteBookingById(Long bookingId);
 }

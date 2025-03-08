@@ -38,4 +38,9 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     public void saveBooking(Booking booking) {
         bookingJpaRepository.save(bookingMapper.toEntity(booking));
     }
+
+    @Override
+    public void deleteBookingById(Long bookingId) {
+        bookingJpaRepository.deleteById(bookingId);
+    }
 }

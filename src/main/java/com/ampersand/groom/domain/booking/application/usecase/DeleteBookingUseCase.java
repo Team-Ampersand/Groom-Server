@@ -17,9 +17,9 @@ public class DeleteBookingUseCase {
 
     public void execute(Long bookingId) {
         Booking booking = bookingPersistencePort.findBookingByIdWithLock(bookingId);
-        if(booking.getPresident().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+        if (booking.getPresident().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
             throw new NotBookingPresidentException();
         }
-        bookingPersistencePort.deleteBooking(booking);
+        bookingPersistencePort.deleteBookingById(bookingId);
     }
 }
