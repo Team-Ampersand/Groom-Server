@@ -12,6 +12,7 @@ import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithTransaction;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -40,15 +41,9 @@ public class CreateBookingUseCase {
                 .ifPresent(booking -> {
                     throw new DuplicateBookingException();
                 });
-        // TODO: Spring Security/JWT에서 현재 사용자 정보 가져오도록 수정하기
-/*        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User is not authenticated");
-        }
-        Member president = (Member) authentication.getPrincipal(); */
-
         List<Member> participantEntities = memberPersistencePort.findMembersByIds(participants);
-        Member president = memberPersistencePort.findMemberById(2L);
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Member president = memberPersistencePort.findMemberByEmail(email);
         if (participantEntities.size() != participants.size() ||
                 participantEntities.stream().anyMatch(member -> member.getId().equals(president.getId()))) {
             throw new InvalidBookingParticipantsException();
