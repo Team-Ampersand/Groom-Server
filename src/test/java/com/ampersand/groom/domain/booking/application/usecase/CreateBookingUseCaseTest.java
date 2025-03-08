@@ -84,7 +84,7 @@ class CreateBookingUseCaseTest {
                         Member.builder().id(4L).name("참가자2").build()
                 );
                 when(timeSlotPersistencePort.findAllTimeSlots()).thenReturn(List.of(timeSlot));
-                when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(any(), any(), any()))
+                when(bookingPersistencePort.findBookingByDateAndTimeAndPlaceWithLock(any(), any(), any()))
                         .thenReturn(List.of());
                 when(memberPersistencePort.findMembersByIds(participantIds)).thenReturn(participants);
                 when(memberPersistencePort.findMemberByEmail("s00002@gsm.hs.kr")).thenReturn(Member.builder().id(2L).build());
@@ -153,7 +153,7 @@ class CreateBookingUseCaseTest {
                         .place(placeEntity)
                         .build();
                 when(timeSlotPersistencePort.findAllTimeSlots()).thenReturn(List.of(timeSlot));
-                when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(any(), any(), any()))
+                when(bookingPersistencePort.findBookingByDateAndTimeAndPlaceWithLock(any(), any(), any()))
                         .thenReturn(List.of(mock(Booking.class)));
 
                 // When & Then
@@ -193,7 +193,7 @@ class CreateBookingUseCaseTest {
                         Member.builder().id(3L).name("참가자1").build()
                 );
                 when(timeSlotPersistencePort.findAllTimeSlots()).thenReturn(List.of(timeSlot));
-                when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(any(), any(), any()))
+                when(bookingPersistencePort.findBookingByDateAndTimeAndPlaceWithLock(any(), any(), any()))
                         .thenReturn(List.of());
                 when(memberPersistencePort.findMemberByEmail(president.getEmail())).thenReturn(president);
                 when(memberPersistencePort.findMembersByIds(participantIds)).thenReturn(participants);
