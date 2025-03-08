@@ -1,7 +1,7 @@
 package com.ampersand.groom.domain.booking.application.usecase;
 
+import com.ampersand.groom.domain.booking.application.port.BookingPersistencePort;
 import com.ampersand.groom.domain.booking.domain.Booking;
-import com.ampersand.groom.domain.booking.persistence.BookingPersistenceAdapter;
 import com.ampersand.groom.domain.booking.persistence.mapper.BookingMapper;
 import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.*;
 class FindBookingByDateAndTimeAndPlaceUseCaseTest {
 
     @Mock
-    private BookingPersistenceAdapter bookingPersistenceAdapter;
+    private BookingPersistencePort bookingPersistencePort;
 
     @Mock
     private BookingMapper bookingMapper;
@@ -48,7 +49,7 @@ class FindBookingByDateAndTimeAndPlaceUseCaseTest {
                 String place = "탁구대";
                 Booking booking = mock(Booking.class);
                 GetBookingResponse response = mock(GetBookingResponse.class);
-                when(bookingPersistenceAdapter.findBookingByDateAndTimeAndPlace(date, time, place))
+                when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(date, time, place))
                         .thenReturn(List.of(booking));
                 when(bookingMapper.toResponse(booking))
                         .thenReturn(response);
@@ -57,7 +58,7 @@ class FindBookingByDateAndTimeAndPlaceUseCaseTest {
                 List<GetBookingResponse> result = findBookingUseCase.execute(date, time, place);
 
                 // Then
-                verify(bookingPersistenceAdapter).findBookingByDateAndTimeAndPlace(date, time, place);
+                verify(bookingPersistencePort).findBookingByDateAndTimeAndPlace(date, time, place);
                 verify(bookingMapper).toResponse(booking);
                 assertEquals(1, result.size());
                 assertEquals(response, result.getFirst());
@@ -75,14 +76,14 @@ class FindBookingByDateAndTimeAndPlaceUseCaseTest {
                 LocalDate date = LocalDate.now();
                 String time = "저녁";
                 String place = "탁구대";
-                when(bookingPersistenceAdapter.findBookingByDateAndTimeAndPlace(date, time, place))
+                when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(date, time, place))
                         .thenReturn(List.of());
 
                 // When
                 List<GetBookingResponse> result = findBookingUseCase.execute(date, time, place);
 
                 // Then
-                verify(bookingPersistenceAdapter).findBookingByDateAndTimeAndPlace(date, time, place);
+                verify(bookingPersistencePort).findBookingByDateAndTimeAndPlace(date, time, place);
                 assertTrue(result.isEmpty());
             }
         }
@@ -100,7 +101,7 @@ class FindBookingByDateAndTimeAndPlaceUseCaseTest {
                 String place = null;
                 Booking booking = mock(Booking.class);
                 GetBookingResponse response = mock(GetBookingResponse.class);
-                when(bookingPersistenceAdapter.findBookingByDateAndTimeAndPlace(date, time, place))
+                when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(date, time, place))
                         .thenReturn(List.of(booking));
                 when(bookingMapper.toResponse(booking))
                         .thenReturn(response);
@@ -109,7 +110,7 @@ class FindBookingByDateAndTimeAndPlaceUseCaseTest {
                 List<GetBookingResponse> result = findBookingUseCase.execute(date, time, place);
 
                 // Then
-                verify(bookingPersistenceAdapter).findBookingByDateAndTimeAndPlace(date, time, place);
+                verify(bookingPersistencePort).findBookingByDateAndTimeAndPlace(date, time, place);
                 verify(bookingMapper).toResponse(booking);
                 assertEquals(1, result.size());
                 assertEquals(response, result.getFirst());
