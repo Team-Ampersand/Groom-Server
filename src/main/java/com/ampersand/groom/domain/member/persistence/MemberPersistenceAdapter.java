@@ -8,9 +8,12 @@ import com.ampersand.groom.domain.member.persistence.mapper.MemberMapper;
 import com.ampersand.groom.domain.member.persistence.repository.MemberJpaRepository;
 import com.ampersand.groom.global.annotation.adapter.Adapter;
 import com.ampersand.groom.global.annotation.adapter.constant.AdapterType;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+
+import static com.ampersand.groom.domain.member.persistence.entity.QMemberJpaEntity.memberJpaEntity;
 
 @Adapter(AdapterType.OUTBOUND)
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class MemberPersistenceAdapter implements MemberPersistencePort {
 
     private final MemberJpaRepository memberJpaRepository;
     private final MemberMapper memberMapper;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<Member> findAllMembers() {
@@ -28,7 +32,18 @@ public class MemberPersistenceAdapter implements MemberPersistencePort {
 
     @Override
     public List<Member> findMembersByCriteria(Long id, String name, Integer generation, String email, Boolean isAvailable, MemberRole role) {
-        return memberJpaRepository.findMembersByCriteria(id, name, generation, email, isAvailable, role).stream()
+        return queryFactory
+                .selectFrom(memberJpaEntity)
+                .where(
+                        id != null ? memberJpaEntity.id.eq(id) : null,
+                        name != null ? memberJpaEntity.name.contains(name) : null,
+                        generation != null ? memberJpaEntity.generation.eq(generation) : null,
+                        email != null ? memberJpaEntity.email.containsIgnoreCase(email) : null,
+                        isAvailable != null ? memberJpaEntity.isAvailable.eq(isAvailable) : null,
+                        role != null ? memberJpaEntity.role.eq(role) : null
+                )
+                .fetch()
+                .stream()
                 .map(memberMapper::toDomain)
                 .toList();
     }
@@ -49,13 +64,21 @@ public class MemberPersistenceAdapter implements MemberPersistencePort {
 
     @Override
     public List<Member> findMembersByIds(List<Long> ids) {
-        return memberJpaRepository.findMembersByIds(ids).stream()
+        return queryFactory
+                .selectFrom(memberJpaEntity)
+                .where(memberJpaEntity.id.in(ids))
+                .fetch()
+                .stream()
                 .map(memberMapper::toDomain)
                 .toList();
     }
 
     @Override
     public void updateMemberPassword(Long id, String newPassword) {
-        memberJpaRepository.updatePassword(id, newPassword);
+        queryFactory
+                .update(memberJpaEntity)
+                .set(memberJpaEntity.password, newPassword)
+                .where(memberJpaEntity.id.eq(id))
+                .execute();
     }
 }
