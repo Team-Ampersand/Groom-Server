@@ -26,6 +26,13 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     }
 
     @Override
+    public List<Booking> findBookingByDateAndTimeAndPlaceWithLock(LocalDate date, String time, String place) {
+        return bookingJpaRepository.findBookingByDateAndTimeAndPlaceWithLock(date, time, place).stream()
+                .map(bookingMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Booking findBookingByIdWithLock(Long bookingId) {
         return bookingMapper.toDomain(bookingJpaRepository.findByIdWithLock(bookingId).orElseThrow(BookingNotFoundException::new));
     }

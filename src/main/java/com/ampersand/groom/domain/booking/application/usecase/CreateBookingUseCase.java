@@ -35,7 +35,7 @@ public class CreateBookingUseCase {
         if(selectedTimeSlot.getPlace().getMaxCapacity() < participants.size() + 1) {
             throw new MaxCapacityExceededException();
         }
-        bookingPersistencePort.findBookingByDateAndTimeAndPlace(LocalDate.now(), selectedTimeSlot.getTimeSlotId().timeLabel(), place)
+        bookingPersistencePort.findBookingByDateAndTimeAndPlaceWithLock(LocalDate.now(), selectedTimeSlot.getTimeSlotId().timeLabel(), place)
                 .stream()
                 .findAny()
                 .ifPresent(booking -> {

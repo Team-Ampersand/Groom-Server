@@ -29,6 +29,17 @@ public class BookingJpaRepositoryCustomImpl implements BookingJpaRepositoryCusto
     }
 
     @Override
+    public List<BookingJpaEntity> findBookingByDateAndTimeAndPlaceWithLock(LocalDate date, String time, String placeType) {
+        return queryFactory
+                .selectFrom(bookingJpaEntity)
+                .where(bookingJpaEntity.bookingDate.eq(date)
+                        .and(bookingJpaEntity.timeSlot.id.timeLabel.eq(time))
+                        .and(placeType != null ? bookingJpaEntity.timeSlot.place.placeName.startsWith(placeType) : null))
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                .fetch();
+    }
+
+    @Override
     public Optional<BookingJpaEntity> findByIdWithLock(Long bookingId) {
         return Optional.ofNullable(
                 queryFactory
