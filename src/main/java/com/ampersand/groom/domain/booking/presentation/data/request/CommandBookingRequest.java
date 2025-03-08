@@ -5,13 +5,12 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
-public record CreateBookingRequest(
+public record CommandBookingRequest(
         @NotNull
         String time,
         @NotNull
         String place,
         @NotNull
-        @Size(min = 1)
         List<Long> participants
 ) {
 }
