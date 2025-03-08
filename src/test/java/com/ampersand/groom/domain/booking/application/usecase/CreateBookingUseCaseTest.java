@@ -12,7 +12,6 @@ import com.ampersand.groom.domain.booking.exception.InvalidBookingParticipantsEx
 import com.ampersand.groom.domain.booking.exception.MaxCapacityExceededException;
 import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.domain.Member;
-import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,10 +19,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -42,6 +44,14 @@ class CreateBookingUseCaseTest {
 
     @InjectMocks
     private CreateBookingUseCase createBookingUseCase;
+
+    private void mockSecurityContext(String email) {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(email);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     @Nested
     @DisplayName("execute 메서드는")
@@ -69,14 +79,6 @@ class CreateBookingUseCaseTest {
                         .timeSlotId(timeSlotId)
                         .place(placeEntity)
                         .build();
-                Member president = Member.builder()
-                        .id(2L)
-                        .role(MemberRole.ROLE_STUDENT)
-                        .email("s00002@gsm.hs.kr")
-                        .generation(8)
-                        .name("성춘향")
-                        .isAvailable(true)
-                        .build();
                 List<Member> participants = List.of(
                         Member.builder().id(3L).name("참가자1").build(),
                         Member.builder().id(4L).name("참가자2").build()
@@ -84,10 +86,9 @@ class CreateBookingUseCaseTest {
                 when(timeSlotPersistencePort.findAllTimeSlots()).thenReturn(List.of(timeSlot));
                 when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(any(), any(), any()))
                         .thenReturn(List.of());
-                when(memberPersistencePort.findMemberById(2L)).thenReturn(president);
                 when(memberPersistencePort.findMembersByIds(participantIds)).thenReturn(participants);
-
-                // TODO: JWT에서 현재 사용자 정보 가져오도록 수정 필요
+                when(memberPersistencePort.findMemberByEmail("s00002@gsm.hs.kr")).thenReturn(Member.builder().id(2L).build());
+                mockSecurityContext("s00002@gsm.hs.kr");
 
                 // When
                 createBookingUseCase.execute(time, place, participantIds);
@@ -184,6 +185,7 @@ class CreateBookingUseCaseTest {
                         .build();
                 Member president = Member.builder()
                         .id(2L)
+                        .email("s00002@gsm.hs.kr")
                         .name("성춘향")
                         .build();
                 List<Member> participants = List.of(
@@ -193,8 +195,9 @@ class CreateBookingUseCaseTest {
                 when(timeSlotPersistencePort.findAllTimeSlots()).thenReturn(List.of(timeSlot));
                 when(bookingPersistencePort.findBookingByDateAndTimeAndPlace(any(), any(), any()))
                         .thenReturn(List.of());
-                when(memberPersistencePort.findMemberById(2L)).thenReturn(president);
+                when(memberPersistencePort.findMemberByEmail(president.getEmail())).thenReturn(president);
                 when(memberPersistencePort.findMembersByIds(participantIds)).thenReturn(participants);
+                mockSecurityContext("s00002@gsm.hs.kr");
 
                 // When & Then
                 assertThrows(InvalidBookingParticipantsException.class, () ->
