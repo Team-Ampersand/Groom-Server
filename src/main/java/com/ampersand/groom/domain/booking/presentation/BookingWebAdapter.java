@@ -53,8 +53,10 @@ public class BookingWebAdapter {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{bookingId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBooking() { // TODO: 구현
+    public ResponseEntity<Void> deleteBooking(@PathVariable(value = "bookingId") Long bookingId) {
+        bookingApplicationPort.deleteBooking(bookingId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
