@@ -10,7 +10,6 @@ import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
@@ -27,7 +26,7 @@ public class UpdateBookingUseCase {
 
     public void execute(Long bookingId, String time, String place, List<Long> participants) {
         Booking booking = bookingPersistencePort.findBookingById(bookingId);
-        if(booking.getBookingDate().isAfter(LocalDate.now())) {
+        if(booking.getBookingDate().isBefore(LocalDate.now())) {
             throw new NotBookingDateException();
         }
         String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
