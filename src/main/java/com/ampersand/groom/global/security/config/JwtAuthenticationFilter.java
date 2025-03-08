@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = jwtService.resolveToken(request);
 
-        if (request.getRequestURI().startsWith("/auth")) {
+        if (request.getRequestURI().startsWith("/auth") || request.getRequestURI().equals("/health")) {
             filterChain.doFilter(request, response);
             return;
         }
