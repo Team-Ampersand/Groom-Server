@@ -2,6 +2,7 @@ package com.ampersand.groom.domain.booking.persistence.repository.custom;
 
 import com.ampersand.groom.domain.booking.persistence.entity.BookingJpaEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,15 @@ public class BookingJpaRepositoryCustomImpl implements BookingJpaRepositoryCusto
                         .and(bookingJpaEntity.timeSlot.id.timeLabel.eq(time))
                         .and(placeType != null ? bookingJpaEntity.timeSlot.place.placeName.startsWith(placeType) : null))
                 .fetch();
+    }
+
+    @Override
+    public BookingJpaEntity findByIdWithLock(Long bookingId) {
+        return queryFactory
+                .selectFrom(bookingJpaEntity)
+                .where(bookingJpaEntity.id.eq(bookingId))
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                .fetchOne();
     }
 
     @Override

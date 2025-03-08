@@ -25,10 +25,8 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     }
 
     @Override
-    public Booking findBookingById(Long bookingId) {
-        return bookingJpaRepository.findById(bookingId)
-                .map(bookingMapper::toDomain)
-                .orElse(null);
+    public Booking findBookingByIdWithLock(Long bookingId) {
+        return bookingMapper.toDomain(bookingJpaRepository.findByIdWithLock(bookingId));
     }
 
     @Override

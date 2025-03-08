@@ -9,13 +9,11 @@ import com.ampersand.groom.domain.member.application.port.MemberPersistencePort;
 import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.global.annotation.usecase.UseCaseWithTransaction;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Slf4j
 @UseCaseWithTransaction
 @RequiredArgsConstructor
 public class UpdateBookingUseCase {
@@ -25,7 +23,7 @@ public class UpdateBookingUseCase {
     private final TimeSlotPersistencePort timeSlotPersistencePort;
 
     public void execute(Long bookingId, String time, String place, List<Long> participants) {
-        Booking booking = bookingPersistencePort.findBookingById(bookingId);
+        Booking booking = bookingPersistencePort.findBookingByIdWithLock(bookingId);
         if(booking.getBookingDate().isBefore(LocalDate.now())) {
             throw new NotBookingDateException();
         }

@@ -8,5 +8,7 @@ import java.util.List;
 public interface BookingJpaRepositoryCustom {
     List<BookingJpaEntity> findBookingByDateAndTimeAndPlace(LocalDate date, String time, String placeType);
 
+    BookingJpaEntity findByIdWithLock(Long bookingId);
+
     Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String placeType);
 }
