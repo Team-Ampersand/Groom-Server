@@ -25,6 +25,18 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     }
 
     @Override
+    public Booking findBookingById(Long bookingId) {
+        return bookingJpaRepository.findById(bookingId)
+                .map(bookingMapper::toDomain)
+                .orElse(null);
+    }
+
+    @Override
+    public Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place) {
+        return bookingJpaRepository.ExistsBookingByDateAndTimeAndPlace(date, time, place);
+    }
+
+    @Override
     public void saveBooking(Booking booking) {
         bookingJpaRepository.save(bookingMapper.toEntity(booking));
     }

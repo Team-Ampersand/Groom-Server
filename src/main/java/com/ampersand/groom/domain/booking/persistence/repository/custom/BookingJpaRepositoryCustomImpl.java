@@ -25,4 +25,17 @@ public class BookingJpaRepositoryCustomImpl implements BookingJpaRepositoryCusto
                         .and(placeType != null ? bookingJpaEntity.timeSlot.place.placeName.startsWith(placeType) : null))
                 .fetch();
     }
+
+    @Override
+    public Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place) {
+        Integer result = queryFactory
+                .selectOne()
+                .from(bookingJpaEntity)
+                .where(bookingJpaEntity.bookingDate.eq(date)
+                        .and(bookingJpaEntity.timeSlot.id.timeLabel.eq(time))
+                        .and(bookingJpaEntity.timeSlot.place.placeName.eq(place))
+                )
+                .fetchFirst();
+        return result != null;
+    }
 }

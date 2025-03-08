@@ -6,7 +6,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -48,6 +47,14 @@ public class MemberJpaRepositoryCustomImpl implements MemberJpaRepositoryCustom 
                         eqRole(role)
                 )
                 .fetch();
+    }
+
+    @Override
+    public MemberJpaEntity findMemberByEmail(String email) {
+        return queryFactory
+                .selectFrom(memberJpaEntity)
+                .where(memberJpaEntity.email.eq(email))
+                .fetchOne();
     }
 
     private BooleanExpression eqId(Long id) {

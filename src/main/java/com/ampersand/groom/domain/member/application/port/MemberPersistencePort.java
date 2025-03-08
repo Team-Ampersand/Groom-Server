@@ -12,6 +12,8 @@ public interface MemberPersistencePort {
 
     Member findMemberById(Long id);
 
+    Member findMemberByEmail(String email);
+
     List<Member> findMembersByIds(List<Long> ids);
 
     void updateMemberPassword(Long id, String newPassword);

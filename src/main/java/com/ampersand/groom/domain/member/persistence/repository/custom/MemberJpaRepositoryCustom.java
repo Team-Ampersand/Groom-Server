@@ -10,5 +10,7 @@ public interface MemberJpaRepositoryCustom {
 
     List<MemberJpaEntity> findMembersByIds(List<Long> ids);
 
+    MemberJpaEntity findMemberByEmail(String email);
+
     void updatePassword(Long id, String newPassword);
 }

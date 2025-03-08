@@ -9,5 +9,9 @@ import java.util.List;
 public interface BookingPersistencePort {
     List<Booking> findBookingByDateAndTimeAndPlace(LocalDate date, String time, String place);
 
+    Booking findBookingById(Long bookingId);
+
+    Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place);
+
     void saveBooking(Booking booking);
 }
