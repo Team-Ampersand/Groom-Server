@@ -42,7 +42,9 @@ public class MemberPersistenceAdapter implements MemberPersistencePort {
 
     @Override
     public Member findMemberByEmail(String email) {
-        return memberMapper.toDomain(memberJpaRepository.findMemberByEmail(email));
+        return memberJpaRepository.findMemberByEmail(email)
+                .map(memberMapper::toDomain)
+                .orElseThrow(MemberNotFoundException::new);
     }
 
     @Override

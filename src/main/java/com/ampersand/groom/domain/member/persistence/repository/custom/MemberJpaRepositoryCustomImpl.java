@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.ampersand.groom.domain.member.persistence.entity.QMemberJpaEntity.memberJpaEntity;
 
@@ -50,11 +51,12 @@ public class MemberJpaRepositoryCustomImpl implements MemberJpaRepositoryCustom 
     }
 
     @Override
-    public MemberJpaEntity findMemberByEmail(String email) {
-        return queryFactory
-                .selectFrom(memberJpaEntity)
-                .where(memberJpaEntity.email.eq(email))
-                .fetchOne();
+    public Optional<MemberJpaEntity> findMemberByEmail(String email) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(memberJpaEntity)
+                        .where(memberJpaEntity.email.eq(email))
+                        .fetchOne());
     }
 
     private BooleanExpression eqId(Long id) {
