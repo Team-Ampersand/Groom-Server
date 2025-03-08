@@ -26,12 +26,11 @@ public class UpdateBookingUseCase {
     private final TimeSlotPersistencePort timeSlotPersistencePort;
 
     public void execute(Long bookingId, String time, String place, List<Long> participants) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalStateException("User is not authenticated");
-        }
         Booking booking = bookingPersistencePort.findBookingById(bookingId);
-        String email = authentication.getPrincipal().toString();
+        if(booking.getBookingDate().isAfter(LocalDate.now())) {
+            throw new NotBookingDateException();
+        }
+        String email = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Member president = memberPersistencePort.findMemberByEmail(email);
         if(!president.getId().equals(booking.getPresident().getId())) {
             throw new NotBookingPresidentException();
