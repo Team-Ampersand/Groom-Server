@@ -50,7 +50,7 @@ jobs:
         run: sleep 120
       - name: 🧪 Test Application
         run: |
-          RESPONSE=$(curl -s "http://127.0.0.1:8080${{ secrets.HEALTH_CHECK_PATH }}/health")
+          RESPONSE=$(curl -s "http://127.0.0.1:8080${{ secrets.HEALTH_CHECK_PATH }}")
           if [ "$RESPONSE" != "OK" ]; then
             echo "💣 Health Check Failed"
             exit 1
