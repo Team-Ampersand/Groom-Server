@@ -38,8 +38,8 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     }
 
     @Override
-    public Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place) {
-        return bookingJpaRepository.ExistsBookingByDateAndTimeAndPlace(date, time, place);
+    public Boolean existsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place) {
+        return bookingJpaRepository.existsBookingByDateAndTimeAndPlace(date, time, place);
     }
 
     @Override

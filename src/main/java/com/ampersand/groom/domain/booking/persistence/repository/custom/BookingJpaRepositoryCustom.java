@@ -13,5 +13,5 @@ public interface BookingJpaRepositoryCustom {
 
     Optional<BookingJpaEntity> findByIdWithLock(Long bookingId);
 
-    Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String placeType);
+    Boolean existsBookingByDateAndTimeAndPlace(LocalDate date, String time, String placeType);
 }

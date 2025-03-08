@@ -38,7 +38,7 @@ public class UpdateBookingUseCase {
                 .filter(timeSlot -> timeSlot.getTimeSlotId().timeLabel().equals(time))
                 .findAny()
                 .orElseThrow(InvalidBookingInfomationException::new);
-        if(bookingPersistencePort.ExistsBookingByDateAndTimeAndPlace(LocalDate.now(), time, place)) {
+        if(bookingPersistencePort.existsBookingByDateAndTimeAndPlace(LocalDate.now(), time, place)) {
             throw new DuplicateBookingException();
         }
         if(selectedTimeSlot.getPlace().getMaxCapacity() < participants.size() + 1) {

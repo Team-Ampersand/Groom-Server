@@ -84,7 +84,7 @@ class UpdateBookingUseCaseTest {
                                 .place(Place.builder().placeName(place).maxCapacity(4).build())
                                 .build()
                 ));
-                when(bookingPersistencePort.ExistsBookingByDateAndTimeAndPlace(any(), any(), any())).thenReturn(false);
+                when(bookingPersistencePort.existsBookingByDateAndTimeAndPlace(any(), any(), any())).thenReturn(false);
                 when(memberPersistencePort.findMembersByIds(participantIds)).thenReturn(List.of(
                         Member.builder().id(3L).build(),
                         Member.builder().id(4L).build()
@@ -154,7 +154,7 @@ class UpdateBookingUseCaseTest {
                 Long bookingId = 1L;
                 String time = "저녁";
                 String place = "탁구대";
-                when(bookingPersistencePort.ExistsBookingByDateAndTimeAndPlace(any(), any(), any())).thenReturn(true);
+                when(bookingPersistencePort.existsBookingByDateAndTimeAndPlace(any(), any(), any())).thenReturn(true);
                 when(bookingPersistencePort.findBookingByIdWithLock(bookingId)).thenReturn(
                         Booking.builder().president(Member.builder().id(2L).email("s00001@gsm.hs.kr").build()).bookingDate(LocalDate.now()).build()
                 );

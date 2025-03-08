@@ -51,7 +51,7 @@ public class BookingJpaRepositoryCustomImpl implements BookingJpaRepositoryCusto
     }
 
     @Override
-    public Boolean ExistsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place) {
+    public Boolean existsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place) {
         Integer result = queryFactory
                 .selectOne()
                 .from(bookingJpaEntity)
