@@ -1,9 +1,9 @@
 package com.ampersand.groom.domain.auth.application.usecase;
 
 import com.ampersand.groom.domain.auth.application.service.EmailVerificationService;
-import com.ampersand.groom.domain.auth.expection.EmailFormatInvalidException;
-import com.ampersand.groom.domain.auth.expection.VerificationCodeFormatInvalidException;
-import com.ampersand.groom.domain.auth.expection.VerificationCodeExpiredOrInvalidException;
+import com.ampersand.groom.domain.auth.exception.EmailFormatInvalidException;
+import com.ampersand.groom.domain.auth.exception.VerificationCodeFormatInvalidException;
+import com.ampersand.groom.domain.auth.exception.VerificationCodeExpiredOrInvalidException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

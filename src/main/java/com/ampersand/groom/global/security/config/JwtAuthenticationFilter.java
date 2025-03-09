@@ -2,7 +2,7 @@ package com.ampersand.groom.global.security.config;
 
 import com.ampersand.groom.domain.auth.application.service.CustomUserDetailsService;
 import com.ampersand.groom.domain.auth.application.service.JwtService;
-import com.ampersand.groom.domain.auth.expection.UserNotFoundException;
+import com.ampersand.groom.domain.auth.exception.UserNotFoundException;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

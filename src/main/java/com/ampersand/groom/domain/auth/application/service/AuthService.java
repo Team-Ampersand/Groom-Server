@@ -2,7 +2,7 @@ package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.AuthPort;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
-import com.ampersand.groom.domain.auth.expection.*;
+import com.ampersand.groom.domain.auth.exception.*;
 import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import com.ampersand.groom.domain.member.persistence.entity.MemberJpaEntity;
