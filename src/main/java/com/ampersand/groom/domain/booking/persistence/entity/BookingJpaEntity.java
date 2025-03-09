@@ -15,10 +15,16 @@ import java.util.Set;
 
 @Getter
 @Entity
-@Table(name = "booking")
+@Table(
+        name = "booking",
+        indexes = {
+                @Index(name = "idx_booking_place_time", columnList = "place_id, time_label")
+        }
+)
 @AttributeOverride(name = "id", column = @Column(name = "booking_id", nullable = false))
 @NoArgsConstructor
 public class BookingJpaEntity extends BaseIdEntity {
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "president_id")
     private MemberJpaEntity president;
