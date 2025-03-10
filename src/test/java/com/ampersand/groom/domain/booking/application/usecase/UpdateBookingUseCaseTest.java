@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("UpdateBookingUseCase 클래스의")
+@DisplayName("Booking 수정 UseCase 클래스의")
 class UpdateBookingUseCaseTest {
 
     @Mock

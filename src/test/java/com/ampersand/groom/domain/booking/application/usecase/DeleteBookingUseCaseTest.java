@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("DeleteBookingUseCase 클래스의")
+@DisplayName("Booking 삭제 UseCase 클래스의")
 class DeleteBookingUseCaseTest {
 
     @Mock
