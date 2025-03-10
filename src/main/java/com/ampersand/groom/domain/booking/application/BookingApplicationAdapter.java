@@ -20,6 +20,7 @@ public class BookingApplicationAdapter implements BookingApplicationPort {
     private final CreateBookingUseCase createBookingUseCase;
     private final UpdateBookingUseCase updateBookingUseCase;
     private final DeleteBookingUseCase deleteBookingUseCase;
+    private final DeleteOldBookingUseCase deleteOldBookingUseCase;
 
     @Override
     public List<GetPlaceResponse> findPlaceByBookingAvailability(LocalDate date, String time, String placeType) {
@@ -44,5 +45,10 @@ public class BookingApplicationAdapter implements BookingApplicationPort {
     @Override
     public void deleteBooking(Long id) {
         deleteBookingUseCase.execute(id);
+    }
+
+    @Override
+    public void deleteOldBookings() {
+        deleteOldBookingUseCase.execute();
     }
 }

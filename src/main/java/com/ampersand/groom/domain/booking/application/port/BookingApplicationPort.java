@@ -16,4 +16,6 @@ public interface BookingApplicationPort {
     void updateBooking(Long id, String time, String place, List<Long> participants);
 
     void deleteBooking(Long id);
+
+    void deleteOldBookings();
 }

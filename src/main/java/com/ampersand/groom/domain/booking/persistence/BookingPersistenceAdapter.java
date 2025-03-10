@@ -85,4 +85,12 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     public void deleteBookingById(Long bookingId) {
         bookingJpaRepository.deleteById(bookingId);
     }
+
+    @Override
+    public void deleteOldBookings() {
+        queryFactory
+                .delete(bookingJpaEntity)
+                .where(bookingJpaEntity.bookingDate.before(LocalDate.now().minusDays(2)))
+                .execute();
+    }
 }

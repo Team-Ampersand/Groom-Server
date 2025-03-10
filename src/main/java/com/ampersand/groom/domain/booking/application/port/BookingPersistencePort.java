@@ -17,4 +17,6 @@ public interface BookingPersistencePort {
     void saveBooking(Booking booking);
 
     void deleteBookingById(Long bookingId);
+
+    void deleteOldBookings();
 }
