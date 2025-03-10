@@ -53,6 +53,17 @@ public class BookingPersistenceAdapter implements BookingPersistencePort {
     }
 
     @Override
+    public List<Booking> findBookingByMemberId(Long memberId) {
+        return queryFactory
+                .selectFrom(bookingJpaEntity)
+                .where(bookingJpaEntity.president.id.eq(memberId))
+                .fetch()
+                .stream()
+                .map(bookingMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Booking findBookingByIdWithLock(Long bookingId) {
         return Optional.ofNullable(
                 queryFactory
