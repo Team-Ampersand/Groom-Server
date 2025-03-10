@@ -12,21 +12,20 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "member")
-@ToString
+@AttributeOverride(name = "id", column = @Column(name = "member_id"))
 public class MemberJpaEntity extends BaseIdEntity {
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10)
     private String name;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 30)
     private String email;
     @Column(nullable = false)
-    @ToString.Exclude
     private String password;
     @Column(nullable = false)
     private Integer generation;
-    @Column(nullable = false, name = "available")
+    @Column(name = "available", nullable = false)
     private Boolean isAvailable;
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private MemberRole role;
 
     @Builder
