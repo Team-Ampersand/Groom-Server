@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record GetBookingResponse(
+        Long id,
         String place,
         GetMemberResponse president,
         List<GetMemberResponse> participants,

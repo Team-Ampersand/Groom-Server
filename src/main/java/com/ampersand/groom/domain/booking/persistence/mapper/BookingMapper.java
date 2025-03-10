@@ -46,6 +46,7 @@ public class BookingMapper implements GenericMapper<BookingJpaEntity, Booking> {
         TimeSlot timeSlot = booking.getTimeSlot();
         Member president = booking.getPresident();
         return new GetBookingResponse(
+                booking.getId(),
                 timeSlot.getPlace().getPlaceName(),
                 new GetMemberResponse(
                         president.getId(),
