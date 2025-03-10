@@ -37,9 +37,9 @@ public class MemberWebAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.findMembersByCriteria(id, name, generation, email, isAvailable, role));
     }
 
-    @GetMapping("/current")  // TODO: 인증/인가 및 booking 관련 로직 구현 시 구현
+    @GetMapping("/current")
     public ResponseEntity<GetCurrentMemberResponse> getCurrentMember() {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.findCurrentMember());
     }
 
     @PatchMapping("/{id}/password")

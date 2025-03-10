@@ -2,6 +2,7 @@ package com.ampersand.groom.domain.member.application;
 
 import com.ampersand.groom.domain.member.application.port.MemberApplicationPort;
 import com.ampersand.groom.domain.member.application.usecase.FindAllMembersUseCase;
+import com.ampersand.groom.domain.member.application.usecase.FindCurrentMemberUseCase;
 import com.ampersand.groom.domain.member.application.usecase.FindMembersByCriteriaUseCase;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import com.ampersand.groom.domain.member.presentation.data.response.GetCurrentMemberResponse;
@@ -18,6 +19,7 @@ public class MemberApplicationAdapter implements MemberApplicationPort {
 
     private final FindAllMembersUseCase findAllMembersUseCase;
     private final FindMembersByCriteriaUseCase findMembersByCriteriaUseCase;
+    private final FindCurrentMemberUseCase findCurrentMemberUseCase;
 
     @Override
     public List<GetMemberResponse> findAllMembers() {
@@ -31,7 +33,7 @@ public class MemberApplicationAdapter implements MemberApplicationPort {
 
     @Override
     public GetCurrentMemberResponse findCurrentMember() {
-        return null;  // TODO: 인증/인가 및 booking 관련 로직 구현 시 구현
+        return findCurrentMemberUseCase.execute();
     }
 
     @Override
