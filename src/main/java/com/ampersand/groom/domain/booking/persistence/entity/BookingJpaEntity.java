@@ -14,18 +14,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@Setter
 @Entity
-@Table(name = "booking")
+@Table(
+        name = "booking",
+        indexes = {
+                @Index(name = "idx_booking_place_time", columnList = "place_id, time_label")
+        }
+)
 @AttributeOverride(name = "id", column = @Column(name = "booking_id", nullable = false))
 @NoArgsConstructor
 public class BookingJpaEntity extends BaseIdEntity {
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "president_id")
     private MemberJpaEntity president;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "place_id", referencedColumnName = "place_id"),
+            @JoinColumn(name = "time_label", referencedColumnName = "time_label")
+    })
     private TimeSlotJpaEntity timeSlot;
 
     @NotNull

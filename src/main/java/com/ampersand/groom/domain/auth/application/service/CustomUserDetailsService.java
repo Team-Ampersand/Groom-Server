@@ -1,7 +1,7 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.AuthPort;
-import com.ampersand.groom.domain.auth.expection.UserNotFoundException;
+import com.ampersand.groom.domain.auth.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

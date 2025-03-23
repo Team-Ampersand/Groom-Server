@@ -1,13 +1,15 @@
 package com.ampersand.groom.domain.booking.presentation.data.response;
 
-import com.ampersand.groom.domain.member.domain.Member;
+import com.ampersand.groom.domain.member.presentation.data.response.GetMemberResponse;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public record GetBookingResponse(
+        Long id,
         String place,
-        List<Member> participants,
+        GetMemberResponse president,
+        List<GetMemberResponse> participants,
         LocalDate date,
         String time
 ) {

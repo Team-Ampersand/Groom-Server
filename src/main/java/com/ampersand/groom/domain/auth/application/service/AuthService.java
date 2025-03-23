@@ -1,9 +1,10 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.AuthPort;
-import com.ampersand.groom.domain.auth.expection.*;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
+import com.ampersand.groom.domain.auth.exception.*;
 import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
+import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import com.ampersand.groom.domain.member.persistence.entity.MemberJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -27,74 +30,95 @@ public class AuthService {
     private long refreshTokenExpiration;
 
     public JwtToken signIn(String email, String password) {
+        MemberJpaEntity user = findUserByEmail(email);
+        validateUserStatus(user);
+        validatePassword(password, user.getPassword());
+        return generateJwtToken(email, user.getRole());
+    }
 
-        MemberJpaEntity user = authPort.findMembersByCriteria(email)
-                .orElseThrow(()->new UserNotFoundException());
+    public JwtToken refreshToken(String refreshToken) {
+        validateRefreshToken(refreshToken);
+        String email = jwtService.getEmailFromToken(refreshToken);
+        validateToken(email, refreshToken);
+        MemberJpaEntity user = findUserByEmail(email);
+        return generateJwtToken(email, user.getRole());
+    }
 
-        if(!user.getIsAvailable()) {
+    public void signup(SignupRequest request) {
+        checkUserExists(request.getEmail());
+        MemberJpaEntity newUser = createNewUser(request, calculateGenerationFromEmail(request.getEmail()));
+        authPort.save(newUser);
+    }
+
+    private MemberJpaEntity findUserByEmail(String email) {
+        return authPort.findMembersByCriteria(email)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    private void validateUserStatus(MemberJpaEntity user) {
+        if (!user.getIsAvailable()) {
             throw new UserForbiddenException();
         }
+    }
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+    private void validatePassword(String rawPassword, String encodedPassword) {
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new PasswordInvalidException();
         }
+    }
 
-        String accessToken = jwtService.createAccessToken(email);
-        String refreshToken = jwtService.createRefreshToken(email);
-
+    private JwtToken generateJwtToken(String email, MemberRole role) {
+        String accessToken = jwtService.createAccessToken(email, role);
+        String refreshToken = jwtService.createRefreshToken(email, role);
         return JwtToken.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpiration(Instant.now().plusMillis(accessTokenExpiration))
                 .refreshTokenExpiration(Instant.now().plusMillis(refreshTokenExpiration))
-                .role(user.getRole())
+                .role(role)
                 .build();
     }
 
-    public JwtToken refreshToken(String refreshToken) {
+    private void validateRefreshToken(String refreshToken) {
         if (refreshToken == null || refreshToken.isEmpty()) {
             throw new RefreshTokenRequestFormatInvalidException();
         }
-
-        String email = jwtService.getEmailFromToken(refreshToken);
-        boolean isTokenValid = jwtService.refreshToken(email, refreshToken);
-        if (!isTokenValid) {
-            throw new RefreshTokenExpiredOrInvalidException();
-        }
-
-        if (!jwtService.validateToken(refreshToken)) {
-            throw new RefreshTokenExpiredOrInvalidException();
-        }
-
-        MemberJpaEntity user = authPort.findMembersByCriteria(email)
-                .orElseThrow(()->new UserNotFoundException());
-
-        String newAccessToken = jwtService.createAccessToken(email);
-        String newRefreshToken = jwtService.createRefreshToken(email);
-
-        return JwtToken.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
-                .accessTokenExpiration(Instant.now().plusMillis(accessTokenExpiration))
-                .refreshTokenExpiration(Instant.now().plusMillis(refreshTokenExpiration))
-                .role(user.getRole())
-                .build();
     }
 
-    public void signup(SignupRequest request) {
-        authPort.findMembersByCriteria(request.getEmail())
-                .ifPresent(emailVerification -> {
+    private void validateToken(String email, String refreshToken) {
+        if (!jwtService.refreshToken(email, refreshToken) || !jwtService.validateToken(refreshToken)) {
+            throw new RefreshTokenExpiredOrInvalidException();
+        }
+    }
+
+    private void checkUserExists(String email) {
+        authPort.findMembersByCriteria(email)
+                .ifPresent(user -> {
                     throw new UserExistException();
                 });
+    }
 
-        MemberJpaEntity newUser = MemberJpaEntity.builder()
+    private int calculateGenerationFromEmail(String email) {
+        try {
+            Matcher matcher = Pattern.compile("\\d{2}").matcher(email);
+            if (!matcher.find()) {
+                throw new EmailFormatInvalidException();
+            }
+            int admissionYear = Integer.parseInt(matcher.group()) + 2000;
+            return (admissionYear - 2017) + 1;
+        } catch (NumberFormatException e) {
+            throw new EmailFormatInvalidException();
+        }
+    }
+
+    private MemberJpaEntity createNewUser(SignupRequest request, int generation) {
+        return MemberJpaEntity.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .generation(1)
+                .generation(generation)
                 .isAvailable(true)
+                .role(MemberRole.ROLE_STUDENT)
                 .build();
-
-        authPort.save(newUser);
     }
 }

@@ -1,9 +1,9 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
-import com.ampersand.groom.domain.auth.expection.EmailFormatInvalidException;
-import com.ampersand.groom.domain.auth.expection.VerificationCodeFormatInvalidException;
-import com.ampersand.groom.domain.auth.expection.VerificationCodeExpiredOrInvalidException;
+import com.ampersand.groom.domain.auth.exception.EmailFormatInvalidException;
+import com.ampersand.groom.domain.auth.exception.VerificationCodeFormatInvalidException;
+import com.ampersand.groom.domain.auth.exception.VerificationCodeExpiredOrInvalidException;
 import com.ampersand.groom.domain.auth.persistence.EmailVerification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;

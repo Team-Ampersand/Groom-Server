@@ -16,8 +16,7 @@ public class AuthPortAdapter implements AuthPort {
 
     @Override
     public Optional<MemberJpaEntity> findMembersByCriteria(String email) {
-        return memberJpaRepository.findMembersByCriteria(null, null, null, email, null, null)
-                .stream().findFirst();
+        return memberJpaRepository.findMemberByEmail(email);
     }
 
 

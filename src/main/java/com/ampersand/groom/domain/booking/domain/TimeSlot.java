@@ -1,12 +1,12 @@
 package com.ampersand.groom.domain.booking.domain;
 
+import com.ampersand.groom.domain.booking.domain.constant.TimeSlotId;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class TimeSlot {
-    private final Long id;
-    private final String timeLabel;
+    private final TimeSlotId timeSlotId;
     private final Place place;
 }

@@ -2,7 +2,7 @@ package com.ampersand.groom.domain.auth.application;
 
 import com.ampersand.groom.domain.auth.application.service.AuthService;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
-import com.ampersand.groom.domain.auth.expection.*;
+import com.ampersand.groom.domain.auth.exception.*;
 import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
 import org.junit.jupiter.api.*;

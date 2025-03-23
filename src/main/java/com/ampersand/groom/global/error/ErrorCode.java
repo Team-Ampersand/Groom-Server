@@ -7,9 +7,20 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    // MEMBER
     MEMBER_ALREADY_EXISTS("Member already exists", 409),
     MEMBER_NOT_FOUND("Member not found", 404),
 
+    // BOOKING
+    INVALID_BOOKING_PARTICIPANTS("Invalid booking participants", 400),
+    INVALID_BOOKING_INFORMATION("Invalid booking information", 400),
+    DUPLICATE_BOOKING("Duplicate booking", 409),
+    MAX_CAPACITY_EXCEEDED("Max capacity exceeded", 400),
+    NOT_BOOKING_PRESIDENT("Not booking president", 403),
+    NOT_BOOKING_DATE("Not booking date", 403),
+    BOOKING_NOT_FOUND("Booking not found", 404),
+
+    // EMAIL AUTHENTICATION
     VERIFICATION_CODE_EXPIRED_OR_INVALID("Verification code expired or invalid", 401),
     EMAIL_FORMAT_INVALID("Email format invalid", 400),
     VERIFICATION_CODE_FORMAT_INVALID("Verification code format invalid", 400),
