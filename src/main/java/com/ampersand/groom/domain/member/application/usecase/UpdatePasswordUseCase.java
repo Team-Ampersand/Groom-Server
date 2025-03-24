@@ -19,18 +19,13 @@ public class UpdatePasswordUseCase {
 
     public void execute(Long id, String currentPassword, String newPassword) {
         Member member = memberPersistencePort.findMemberById(id);
-        if (!authenticationPersistencePort.existsAuthenticationByEmail(member.getEmail())) {
+        if (!authenticationPersistencePort.existsAuthenticationByEmail(member.getEmail())
+                || !authenticationPersistencePort.findAuthenticationByEmail(member.getEmail()).getVerified()) {
             throw new UserForbiddenException();
         }
-        if (!authenticationPersistencePort.findAuthenticationByEmail(member.getEmail()).getVerified()) {
-            throw new UserForbiddenException();
-        }
-        if(!bCryptPasswordEncoder.matches(member.getPassword(), currentPassword)){
+        if (!bCryptPasswordEncoder.matches(member.getPassword(), currentPassword)) {
             throw new PasswordInvalidException();
         }
-        memberPersistencePort.updateMemberPassword(
-                member.getId(),
-                bCryptPasswordEncoder.encode(newPassword)
-        );
+        memberPersistencePort.updateMemberPassword(member.getId(), bCryptPasswordEncoder.encode(newPassword));
     }
 }
