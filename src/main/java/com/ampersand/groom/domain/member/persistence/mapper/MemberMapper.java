@@ -44,6 +44,4 @@ public class MemberMapper implements GenericMapper<MemberJpaEntity, Member> {
                 member.getRole()
         );
     }
-
-    // TODO: booking 구현 후 current member api 구현 시 오버로딩 하여 toResponse 메서드 하나 더 구현해야 할것 같습니다
 }
