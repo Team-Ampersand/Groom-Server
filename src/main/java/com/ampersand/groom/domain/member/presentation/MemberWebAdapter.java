@@ -42,12 +42,13 @@ public class MemberWebAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(memberApplicationPort.findCurrentMember());
     }
 
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/{memberId}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> updateMemberPassword(
-            @PathVariable Long id,
+            @PathVariable(value = "memberId") Long memberId,
             @Valid @RequestBody UpdateMemberPasswordRequest request
     ) {
-        return null;  // TODO: 인증/인가 및 Email 전송 로직 구현 시 구현
+        memberApplicationPort.updatePassword(memberId, request.currentPassword(), request.newPassword());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
