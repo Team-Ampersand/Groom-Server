@@ -20,8 +20,8 @@ public class AuthController {
 
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request) {
-       JwtToken jwtToken = authService.signIn(request.getEmail(), request.getPassword());
-       return ResponseEntity.ok(jwtToken);
+        JwtToken jwtToken = authService.signIn(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(jwtToken);
     }
 
     @PostMapping("/signup")
