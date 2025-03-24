@@ -1,6 +1,7 @@
 package com.ampersand.groom.domain.auth.application.service;
 
 import com.ampersand.groom.domain.auth.application.port.AuthPort;
+import com.ampersand.groom.domain.auth.application.port.AuthenticationPersistencePort;
 import com.ampersand.groom.domain.auth.domain.JwtToken;
 import com.ampersand.groom.domain.auth.exception.*;
 import com.ampersand.groom.domain.auth.presentation.data.request.SignupRequest;
@@ -22,6 +23,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthPort authPort;
+    private final AuthenticationPersistencePort authenticationPersistencePort;
 
     @Value("${spring.jwt.token.access-expiration}")
     private long accessTokenExpiration;
@@ -46,6 +48,10 @@ public class AuthService {
 
     public void signup(SignupRequest request) {
         checkUserExists(request.getEmail());
+        if(!authenticationPersistencePort.existsAuthenticationByEmail(request.getEmail())
+                || !authenticationPersistencePort.findAuthenticationByEmail(request.getEmail()).getVerified()) {
+            throw new UserForbiddenException();
+        }
         MemberJpaEntity newUser = createNewUser(request, calculateGenerationFromEmail(request.getEmail()));
         authPort.save(newUser);
     }
