@@ -23,7 +23,7 @@ public class UpdatePasswordUseCase {
                 || !authenticationPersistencePort.findAuthenticationByEmail(member.getEmail()).getVerified()) {
             throw new UserForbiddenException();
         }
-        if (!bCryptPasswordEncoder.matches(member.getPassword(), currentPassword)) {
+        if (!bCryptPasswordEncoder.matches(currentPassword, member.getPassword())) {
             throw new PasswordInvalidException();
         }
         memberPersistencePort.updateMemberPassword(member.getId(), bCryptPasswordEncoder.encode(newPassword));
