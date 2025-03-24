@@ -1,38 +1,38 @@
 package com.ampersand.groom.domain.auth.persistence.adapter.email;
 
 import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
-
-import com.ampersand.groom.domain.auth.persistence.EmailVerification;
-import com.ampersand.groom.domain.auth.persistence.repository.JpaEmailVerificationRepository;
+import com.ampersand.groom.domain.auth.domain.AuthCode;
+import com.ampersand.groom.domain.auth.persistence.mapper.AuthCodeMapper;
+import com.ampersand.groom.domain.auth.persistence.repository.AuthCodeRedisRepository;
+import com.ampersand.groom.global.annotation.adapter.Adapter;
+import com.ampersand.groom.global.annotation.adapter.constant.AdapterType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-@Component
+@Adapter(AdapterType.OUTBOUND)
 @RequiredArgsConstructor
 public class EmailVerificationAdapter implements EmailVerificationPort {
 
-    private final JpaEmailVerificationRepository jpaEmailVerificationRepository;
+    // private final JpaEmailVerificationRepository jpaEmailVerificationRepository;
+    private final AuthCodeRedisRepository authCodeRedisRepository;
+    private final AuthCodeMapper authCodeMapper;
 
     @Override
-    public EmailVerification save(EmailVerification emailVerification) {
-        return jpaEmailVerificationRepository.save(emailVerification);
+    public void saveAuthCode(AuthCode authCode) {
+        authCodeRedisRepository.save(authCodeMapper.toEntity(authCode));
     }
 
     @Override
-    public Optional<EmailVerification> findByCode(String code) {
-        return jpaEmailVerificationRepository.findByCode(code);
+    public Boolean existsAuthCodeByCode(String code) {
+        return authCodeRedisRepository.existsByCode(code);
     }
 
     @Override
-    public Optional<EmailVerification> findByEmail(String email) {
-        return jpaEmailVerificationRepository.findByEmail(email);
+    public AuthCode findAuthCodeByCode(String code) {
+        return authCodeMapper.toDomain(authCodeRedisRepository.findByCode(code));
     }
 
     @Override
-    public void deleteAllExpired(LocalDateTime now) {
-        jpaEmailVerificationRepository.deleteAllExpired(now);
+    public void deleteAuthCodeByCode(String code) {
+        authCodeRedisRepository.deleteByCode(code);
     }
 }
