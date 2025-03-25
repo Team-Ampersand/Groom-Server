@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    // MEMBER
     MEMBER_ALREADY_EXISTS("Member already exists", 409),
     MEMBER_NOT_FOUND("Member not found", 404),
 
@@ -25,14 +24,17 @@ public enum ErrorCode {
     EMAIL_FORMAT_INVALID("Email format invalid", 400),
     VERIFICATION_CODE_FORMAT_INVALID("Verification code format invalid", 400),
 
+    // AUTHENTICATION
     PASSWORD_INVALID("Password invalid", 401),
     USER_ALREADY_EXISTS("User already exists", 409),
     USER_NOT_FOUND("User not found", 404),
     USER_FORBIDDEN("Email verification is not complete", 403),
     EMAIL_OR_PASSWORD_EMPTY("email or password is empty", 400),
     REFRESH_TOKEN_EXPIRED_OR_INVALID("Refresh token expired or invalid", 401),
-    REFRESH_TOKEN_REQUEST_FORMAT_INVALID("Refresh token request format invalid", 400);
+    REFRESH_TOKEN_REQUEST_FORMAT_INVALID("Refresh token request format invalid", 400),
+    AUTHENTICATION_NOT_FOUND("Authentication Object not found", 403),
 
+    EMAIL_AUTHENTICATION_TOO_MANY_REQUESTS("Too many email authentication requests", 429);
 
     private final String message;
     private final int httpStatus;

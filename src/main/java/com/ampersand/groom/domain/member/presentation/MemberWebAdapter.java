@@ -1,10 +1,10 @@
 package com.ampersand.groom.domain.member.presentation;
 
-import com.ampersand.groom.domain.member.application.MemberApplicationAdapter;
+import com.ampersand.groom.domain.member.application.port.MemberApplicationPort;
 import com.ampersand.groom.domain.member.domain.constant.MemberRole;
+import com.ampersand.groom.domain.member.presentation.data.request.UpdateMemberPasswordRequest;
 import com.ampersand.groom.domain.member.presentation.data.response.GetCurrentMemberResponse;
 import com.ampersand.groom.domain.member.presentation.data.response.GetMemberResponse;
-import com.ampersand.groom.domain.member.presentation.data.request.UpdateMemberPasswordRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ import java.util.List;
 @RequestMapping("/api/v1/members")
 public class MemberWebAdapter {
 
-    private final MemberApplicationAdapter memberApplicationAdapter;
+    private final MemberApplicationPort memberApplicationPort;
 
     @GetMapping
     public ResponseEntity<List<GetMemberResponse>> getAllMembers() {
-        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.findAllMembers());
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationPort.findAllMembers());
     }
 
     @GetMapping("/search")
@@ -34,20 +34,21 @@ public class MemberWebAdapter {
             @RequestParam(value = "isAvailable", required = false) Boolean isAvailable,
             @RequestParam(value = "role", required = false) MemberRole role
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationAdapter.findMembersByCriteria(id, name, generation, email, isAvailable, role));
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationPort.findMembersByCriteria(id, name, generation, email, isAvailable, role));
     }
 
-    @GetMapping("/current")  // TODO: 인증/인가 및 booking 관련 로직 구현 시 구현
+    @GetMapping("/current")
     public ResponseEntity<GetCurrentMemberResponse> getCurrentMember() {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(memberApplicationPort.findCurrentMember());
     }
 
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/{memberId}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> updateMemberPassword(
-            @PathVariable Long id,
+            @PathVariable(value = "memberId") Long memberId,
             @Valid @RequestBody UpdateMemberPasswordRequest request
     ) {
-        return null;  // TODO: 인증/인가 및 Email 전송 로직 구현 시 구현
+        memberApplicationPort.updatePassword(memberId, request.currentPassword(), request.newPassword());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

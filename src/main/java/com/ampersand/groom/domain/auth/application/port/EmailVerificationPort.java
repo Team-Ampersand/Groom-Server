@@ -1,21 +1,18 @@
 package com.ampersand.groom.domain.auth.application.port;
 
-import com.ampersand.groom.domain.auth.persistence.EmailVerification;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
+import com.ampersand.groom.domain.auth.domain.AuthCode;
 
 public interface EmailVerificationPort {
 
-    // 인증 정보 저장
-    EmailVerification save(EmailVerification emailVerification);
+    // 코드로 인증 코드 존재 여부 조회
+    Boolean existsAuthCodeByCode(String code);
 
-    // 인증 코드로 이메일 조회
-    Optional<EmailVerification> findByCode(String code);
+    // 코드로 인증 코드 조회
+    AuthCode findAuthCodeByCode(String code);
 
-    // 이메일로 인증 정보 조회
-    Optional<EmailVerification> findByEmail(String email);
+    // 인증 코드 저장
+    void saveAuthCode(AuthCode authCode);
 
-    // 만료된 인증 정보 삭제
-    void deleteAllExpired(LocalDateTime now);
+    // 인증 코드 삭제
+    void deleteAuthCodeByCode(String code);
 }

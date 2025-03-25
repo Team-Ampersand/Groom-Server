@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -24,13 +25,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final CustomUserDetailsService customUserDetailsService;
 
+    private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = jwtService.resolveToken(request);
 
-        if (request.getRequestURI().startsWith("/auth") || request.getRequestURI().equals("/health")) {
+        String uri = request.getRequestURI();
+
+        if (uri.startsWith("/auth")
+                || uri.equals("/health")
+                || pathMatcher.match("/api/v1/members/**/password", uri)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,10 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     new UsernamePasswordAuthenticationToken(email, null, authorities);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else {
-            throw new UserNotFoundException();
         }
-
         filterChain.doFilter(request, response);
     }
 

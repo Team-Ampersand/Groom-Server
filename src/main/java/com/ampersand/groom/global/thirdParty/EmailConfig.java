@@ -34,6 +34,9 @@ public class EmailConfig {
         Properties properties = new Properties();
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.starttls.required", "true");
+        properties.put("mail.smtp.connectiontimeout", "5000");
+        properties.put("mail.smtp.timeout", "5000");
         mailSender.setJavaMailProperties(properties);
 
         return mailSender;

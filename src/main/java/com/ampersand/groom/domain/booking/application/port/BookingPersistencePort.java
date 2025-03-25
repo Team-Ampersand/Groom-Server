@@ -10,6 +10,8 @@ public interface BookingPersistencePort {
 
     List<Booking> findBookingByDateAndTimeAndPlaceWithLock(LocalDate date, String time, String place);
 
+    List<Booking> findBookingByMemberId(Long memberId);
+
     Booking findBookingByIdWithLock(Long bookingId);
 
     Boolean existsBookingByDateAndTimeAndPlace(LocalDate date, String time, String place);

@@ -20,8 +20,8 @@ public class AuthController {
 
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(@RequestBody @Valid SignInRequest request) {
-       JwtToken jwtToken = authService.signIn(request.getEmail(), request.getPassword());
-       return ResponseEntity.ok(jwtToken);
+        JwtToken jwtToken = authService.signIn(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(jwtToken);
     }
 
     @PostMapping("/signup")
@@ -39,18 +39,18 @@ public class AuthController {
     @PostMapping("/verify-email")
     public ResponseEntity<?> verifyEmail(@RequestBody @Valid VerificationCodeRequest request) {
         emailVerificationUseCase.executeVerifyCode(request.getCode());
-        return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Verification successful.");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Verification successful.");
     }
 
     @PostMapping("/signup/email")
     public ResponseEntity<?> sendSignupVerificationEmail(@RequestBody @Valid EmailRequest request) {
         emailVerificationUseCase.executeSendSignupVerificationEmail(request.getEmail());
-        return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Verification email sent");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Verification email sent");
     }
 
     @PostMapping("/password-change/email")
     public ResponseEntity<?> sendPasswordResetEmail(@RequestBody @Valid EmailRequest request) {
         emailVerificationUseCase.executeSendPasswordResetEmail(request.getEmail());
-        return ResponseEntity.status(HttpStatus.RESET_CONTENT).body("Verification email sent");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Verification email sent");
     }
 }
