@@ -136,7 +136,7 @@ jobs:
             set -e
 
             echo "🩺 Checking Application Health..."
-            RESPONSE=\$(curl -s "https://${{ secrets.PROD_SERVER_URL }}/")
+            RESPONSE=\$(curl -s "https://${{ secrets.PROD_SERVER_URL }}/health")
 
             if [ "\$RESPONSE" = "OK" ]; then
               echo "DEPLOYMENT_STATUS=successful"

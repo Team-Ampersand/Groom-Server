@@ -10,5 +10,10 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
+        format_sql: true
+  cache:
+    expiry-time: ${CACHE_EXPIRY_TIME:120}
+    maximum-size: ${CACHE_MAXIMUM_SIZE:1000}
+    type: caffeine
 server:
   port: ${SERVER_PORT:8080}

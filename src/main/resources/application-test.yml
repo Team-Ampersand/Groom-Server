@@ -13,3 +13,19 @@ spring:
     redis:
       host: localhost
       port: 6379
+  jwt:
+    secret: test-jwt-secret-key
+    token:
+      access-expiration: 7200000
+      refresh-expiration: 2592000000
+email:
+    host: smtp.example.com
+    port: 587
+    username: test-email@example.com
+    password: test-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

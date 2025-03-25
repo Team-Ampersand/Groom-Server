@@ -30,6 +30,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-cache")
 
 	/** AOP */
 	implementation("org.aspectj:aspectjweaver:1.9.19")
@@ -48,6 +49,9 @@ dependencies {
 	runtimeOnly("com.mysql:mysql-connector-j:9.2.0")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.5.1")
 	runtimeOnly("com.h2database:h2:2.3.232")
+
+	/** Cache */
+	implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
 
 	/** QueryDSL */
 	implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
