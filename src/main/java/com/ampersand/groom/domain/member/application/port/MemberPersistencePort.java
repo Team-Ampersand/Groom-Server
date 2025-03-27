@@ -16,5 +16,9 @@ public interface MemberPersistencePort {
 
     List<Member> findMembersByIds(List<Long> ids);
 
+    Boolean existsMemberByEmail(String email);
+
     void updateMemberPassword(Long id, String newPassword);
+
+    void saveMember(Member member);
 }
