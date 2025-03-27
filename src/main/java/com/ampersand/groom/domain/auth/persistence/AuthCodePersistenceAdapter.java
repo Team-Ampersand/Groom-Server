@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthCodePersistenceAdapter implements AuthCodePersistencePort {
 
-    // private final JpaEmailVerificationRepository jpaEmailVerificationRepository;
     private final AuthCodeRedisRepository authCodeRedisRepository;
     private final AuthCodeMapper authCodeMapper;
 
