@@ -28,6 +28,7 @@ email:
     authentication:
       object:
         ttl: 300
+        attempt-count-limit: 5
     properties:
       mail:
         smtp:

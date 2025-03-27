@@ -29,6 +29,7 @@ email:
   authentication:
     object:
       ttl: ${EMAIL_AUTHENTICATION_OBJECT_TTL:300}
+      attempt-count-limit: ${EMAIL_AUTHENTICATION_OBJECT_ATTEMPT_COUNT_LIMIT:5}
   properties:
     mail:
       smtp:
