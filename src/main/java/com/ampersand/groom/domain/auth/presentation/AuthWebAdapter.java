@@ -3,6 +3,7 @@ package com.ampersand.groom.domain.auth.presentation;
 import com.ampersand.groom.domain.auth.application.port.AuthApplicationPort;
 import com.ampersand.groom.domain.auth.presentation.data.request.*;
 import com.ampersand.groom.domain.auth.presentation.data.response.AuthTokenResponse;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class AuthWebAdapter {
     }
 
     @PostMapping("/send-email")
-    public void sendPasswordResetEmail(@Valid @RequestBody SendEmailRequest request) {
+    public void sendPasswordResetEmail(@Valid @RequestBody SendEmailRequest request) throws MessagingException {
         authApplicationPort.sendAuthenticationEmail(request.email());
     }
 }

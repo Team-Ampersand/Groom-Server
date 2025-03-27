@@ -5,6 +5,7 @@ import com.ampersand.groom.domain.auth.application.usecase.*;
 import com.ampersand.groom.domain.auth.presentation.data.response.AuthTokenResponse;
 import com.ampersand.groom.global.annotation.adapter.Adapter;
 import com.ampersand.groom.global.annotation.adapter.constant.AdapterType;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class AuthApplicationAdapter implements AuthApplicationPort {
     }
 
     @Override
-    public void sendAuthenticationEmail(String email) {
+    public void sendAuthenticationEmail(String email) throws MessagingException {
         sendAuthenticationEmailUseCase.execute(email);
     }
 }

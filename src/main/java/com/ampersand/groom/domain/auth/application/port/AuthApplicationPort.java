@@ -1,6 +1,7 @@
 package com.ampersand.groom.domain.auth.application.port;
 
 import com.ampersand.groom.domain.auth.presentation.data.response.AuthTokenResponse;
+import jakarta.mail.MessagingException;
 
 public interface AuthApplicationPort {
 
@@ -12,5 +13,5 @@ public interface AuthApplicationPort {
 
     void verifyEmail(String code);
 
-    void sendAuthenticationEmail(String email);
+    void sendAuthenticationEmail(String email) throws MessagingException;
 }

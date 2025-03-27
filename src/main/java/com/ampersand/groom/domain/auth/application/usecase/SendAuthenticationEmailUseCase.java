@@ -8,6 +8,7 @@ import com.ampersand.groom.domain.auth.domain.Authentication;
 import com.ampersand.groom.domain.auth.exception.EmailAuthRateLimitException;
 import com.ampersand.groom.global.annotation.usecase.UseCase;
 import com.ampersand.groom.infrastructure.thirdparty.email.service.EmailSendService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -23,7 +24,7 @@ public class SendAuthenticationEmailUseCase {
     @Value("${email.authentication.object.attempt-count-limit}")
     private Integer attemptCountLimit;
 
-    public void execute(String email) {
+    public void execute(String email) throws MessagingException {
         if (authenticationPersistencePort.existsAuthenticationByEmail(email)) {
             Authentication authentication = authenticationPersistencePort.findAuthenticationByEmail(email);
             if (authentication.getAttemptCount() >= attemptCountLimit) {
