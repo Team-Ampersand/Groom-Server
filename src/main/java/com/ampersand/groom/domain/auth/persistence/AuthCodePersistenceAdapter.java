@@ -1,6 +1,6 @@
-package com.ampersand.groom.domain.auth.persistence.adapter.email;
+package com.ampersand.groom.domain.auth.persistence;
 
-import com.ampersand.groom.domain.auth.application.port.EmailVerificationPort;
+import com.ampersand.groom.domain.auth.application.port.AuthCodePersistencePort;
 import com.ampersand.groom.domain.auth.domain.AuthCode;
 import com.ampersand.groom.domain.auth.persistence.mapper.AuthCodeMapper;
 import com.ampersand.groom.domain.auth.persistence.repository.AuthCodeRedisRepository;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Adapter(AdapterType.OUTBOUND)
 @RequiredArgsConstructor
-public class EmailVerificationAdapter implements EmailVerificationPort {
+public class AuthCodePersistenceAdapter implements AuthCodePersistencePort {
 
     // private final JpaEmailVerificationRepository jpaEmailVerificationRepository;
     private final AuthCodeRedisRepository authCodeRedisRepository;

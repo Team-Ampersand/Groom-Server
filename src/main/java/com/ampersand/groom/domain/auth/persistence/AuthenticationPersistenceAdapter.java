@@ -1,4 +1,4 @@
-package com.ampersand.groom.domain.auth.persistence.adapter.email;
+package com.ampersand.groom.domain.auth.persistence;
 
 import com.ampersand.groom.domain.auth.application.port.AuthenticationPersistencePort;
 import com.ampersand.groom.domain.auth.domain.Authentication;

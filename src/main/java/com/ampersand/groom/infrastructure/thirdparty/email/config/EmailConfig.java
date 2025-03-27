@@ -1,4 +1,4 @@
-package com.ampersand.groom.global.thirdParty;
+package com.ampersand.groom.infrastructure.thirdparty.email.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
