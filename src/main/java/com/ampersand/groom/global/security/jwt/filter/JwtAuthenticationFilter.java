@@ -20,16 +20,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtParserService jwtParserService;
-
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
+    private final JwtParserService jwtParserService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String token = jwtParserService.resolveToken(request);
         String uri = request.getRequestURI();
-        if (uri.startsWith("/auth")
+        if (uri.startsWith("/api/v1/auth")
                 || uri.equals("/health")
                 || pathMatcher.match("/api/v1/members/**/password", uri)) {
             filterChain.doFilter(request, response);
@@ -41,11 +40,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roles.name()));
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(email, null, authorities);
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+            return;
         }
-        filterChain.doFilter(request, response);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"message\": \"Unauthorized or invalid token.\"}");
     }
-
 }
-
