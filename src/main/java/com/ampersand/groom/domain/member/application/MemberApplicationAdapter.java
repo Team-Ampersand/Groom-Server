@@ -39,7 +39,7 @@ public class MemberApplicationAdapter implements MemberApplicationPort {
     }
 
     @Override
-    public void updatePassword(Long id, String currentPassword, String newPassword) {
-        updatePasswordUseCase.execute(id, currentPassword, newPassword);
+    public void updatePassword(String email, String currentPassword, String newPassword) {
+        updatePasswordUseCase.execute(email, currentPassword, newPassword);
     }
 }
