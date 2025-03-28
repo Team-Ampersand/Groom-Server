@@ -13,5 +13,5 @@ public interface MemberApplicationPort {
 
     GetCurrentMemberResponse findCurrentMember();
 
-    void updatePassword(Long id, String currentPassword, String newPassword);
+    void updatePassword(String email, String currentPassword, String newPassword);
 }
