@@ -17,10 +17,10 @@ spring:
   jwt:
     access-token:
       secret: dev-jwt-access-token-secret-key
-      expiration: 7200000
+      expiration: 7200
     refresh-token:
       secret: dev-jwt-refresh-token-secret-key
-      expiration: 2592000000
+      expiration: 7200
 email:
   host: ${EMAIL_HOST}
   port: 587

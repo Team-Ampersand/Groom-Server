@@ -41,7 +41,7 @@ public class JwtIssueServiceImpl implements JwtIssueService {
 
     @Override
     public TokenDto issueAccessToken(String email, MemberRole roles) {
-        LocalDateTime expiration = LocalDateTime.now().plusMinutes(accessTokenExpiration);
+        LocalDateTime expiration = LocalDateTime.now().plusSeconds(accessTokenExpiration);
         return new TokenDto(
                 Jwts.builder()
                         .claim("sub", email)
@@ -57,7 +57,7 @@ public class JwtIssueServiceImpl implements JwtIssueService {
 
     @Override
     public TokenDto issueRefreshToken(String email) {
-        LocalDateTime expiration = LocalDateTime.now().plusMinutes(refreshTokenExpiration);
+        LocalDateTime expiration = LocalDateTime.now().plusSeconds(refreshTokenExpiration);
         TokenDto token = new TokenDto(
                 Jwts.builder()
                         .claim("sub", email)
