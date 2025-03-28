@@ -23,8 +23,10 @@ public class AuthWebAdapter {
     }
 
     @PostMapping("/signup")
-    public void signUp(@Valid @RequestBody SignUpRequest request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequest request) {
         authApplicationPort.signUp(request.email(), request.password(), request.name());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/refresh")
@@ -32,13 +34,17 @@ public class AuthWebAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(authApplicationPort.refresh(request.refreshToken()));
     }
 
-    @PostMapping("/verify-email")
-    public void verifyEmail(@Valid @RequestBody VerificationCodeRequest request) {
+    @PatchMapping("/verify-email")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> verifyEmail(@Valid @RequestBody VerificationCodeRequest request) {
         authApplicationPort.verifyEmail(request.code());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/send-email")
-    public void sendPasswordResetEmail(@Valid @RequestBody SendEmailRequest request) throws MessagingException {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> sendAuthenticationEmail(@Valid @RequestBody SendEmailRequest request) throws MessagingException {
         authApplicationPort.sendAuthenticationEmail(request.email());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
