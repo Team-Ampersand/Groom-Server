@@ -7,10 +7,12 @@ import com.ampersand.groom.domain.booking.presentation.data.response.GetBookingR
 import com.ampersand.groom.domain.member.domain.Member;
 import com.ampersand.groom.domain.member.persistence.mapper.MemberMapper;
 import com.ampersand.groom.domain.member.presentation.data.response.GetMemberResponse;
+import com.ampersand.groom.global.entity.BaseIdEntity;
 import com.ampersand.groom.global.mapper.GenericMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,7 +27,7 @@ public class BookingMapper implements GenericMapper<BookingJpaEntity, Booking> {
         return Booking.builder()
                 .id(bookingJpaEntity.getId())
                 .president(memberMapper.toDomain(bookingJpaEntity.getPresident()))
-                .participants(bookingJpaEntity.getParticipants().stream().map(memberMapper::toDomain).collect(Collectors.toList()))
+                .participants(bookingJpaEntity.getParticipants().stream().sorted(Comparator.comparing(BaseIdEntity::getId)).map(memberMapper::toDomain).collect(Collectors.toList()))
                 .timeSlot(timeSlotMapper.toDomain(bookingJpaEntity.getTimeSlot()))
                 .bookingDate(bookingJpaEntity.getBookingDate())
                 .build();
