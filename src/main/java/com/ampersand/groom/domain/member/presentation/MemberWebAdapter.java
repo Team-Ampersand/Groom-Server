@@ -42,13 +42,13 @@ public class MemberWebAdapter {
         return ResponseEntity.status(HttpStatus.OK).body(memberApplicationPort.findCurrentMember());
     }
 
-    @PatchMapping("/{memberId}/password")
+    @PatchMapping("/{email}/password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> updateMemberPassword(
-            @PathVariable(value = "memberId") Long memberId,
+            @PathVariable(value = "email") String email,
             @Valid @RequestBody UpdateMemberPasswordRequest request
     ) {
-        memberApplicationPort.updatePassword(memberId, request.currentPassword(), request.newPassword());
+        memberApplicationPort.updatePassword(email, request.currentPassword(), request.newPassword());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -17,8 +17,8 @@ public class UpdatePasswordUseCase {
     private final MemberPersistencePort memberPersistencePort;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void execute(Long id, String currentPassword, String newPassword) {
-        Member member = memberPersistencePort.findMemberById(id);
+    public void execute(String email, String currentPassword, String newPassword) {
+        Member member = memberPersistencePort.findMemberByEmail(email);
         if (!authenticationPersistencePort.existsAuthenticationByEmail(member.getEmail())
                 || !authenticationPersistencePort.findAuthenticationByEmail(member.getEmail()).getVerified()) {
             throw new UserForbiddenException();

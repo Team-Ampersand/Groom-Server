@@ -14,3 +14,25 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
+  jwt:
+    access-token:
+      secret: dev-jwt-access-token-secret-key
+      expiration: 7200
+    refresh-token:
+      secret: dev-jwt-refresh-token-secret-key
+      expiration: 7200
+email:
+  host: ${EMAIL_HOST}
+  port: 587
+  username: ${EMAIL_USERNAME}
+  password: ${EMAIL_PASSWORD}
+  authentication:
+    object:
+      ttl: ${EMAIL_AUTHENTICATION_OBJECT_TTL:300}
+      attempt-count-limit: ${EMAIL_AUTHENTICATION_OBJECT_ATTEMPT_COUNT_LIMIT:5}
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true

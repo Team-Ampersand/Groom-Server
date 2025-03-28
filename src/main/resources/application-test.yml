@@ -16,15 +16,19 @@ spring:
   jwt:
     access-token:
       secret: test-jwt-access-token-secret-key
-      expiration: 7200000
+      expiration: 7200
     refresh-token:
       secret: test-jwt-refresh-token-secret-key
-      expiration: 2592000000
+      expiration: 2592000
 email:
     host: smtp.example.com
     port: 587
     username: test-email@example.com
     password: test-password
+    authentication:
+      object:
+        ttl: 300
+        attempt-count-limit: 5
     properties:
       mail:
         smtp:

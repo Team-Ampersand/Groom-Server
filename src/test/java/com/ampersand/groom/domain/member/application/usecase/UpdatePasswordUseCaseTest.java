@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("UpdatePasswordUseCase 클래스의")
+@DisplayName("Member 비밀번호 변경 UseCase 클래스의")
 class UpdatePasswordUseCaseTest {
 
     @Mock
@@ -46,21 +46,18 @@ class UpdatePasswordUseCaseTest {
             @Test
             @DisplayName("UserForbiddenException을 던진다.")
             void it_throws_UserForbiddenException() {
-                // Given
-                Long memberId = 1L;
                 String email = "s00001@email.com";
                 Member member = Member.builder()
-                        .id(memberId)
                         .email(email)
                         .build();
-                when(memberPersistencePort.findMemberById(memberId)).thenReturn(member);
+                when(memberPersistencePort.findMemberByEmail(email)).thenReturn(member);
                 when(authenticationPersistencePort.existsAuthenticationByEmail(email)).thenReturn(true);
                 when(authenticationPersistencePort.findAuthenticationByEmail(email))
                         .thenReturn(Authentication.builder().email(email).verified(false).build());
 
                 // When & Then
                 assertThrows(UserForbiddenException.class, () ->
-                        updatePasswordUseCase.execute(memberId, "oldPass", "newPass"));
+                        updatePasswordUseCase.execute(email, "oldPass", "newPass"));
             }
         }
 
@@ -80,7 +77,7 @@ class UpdatePasswordUseCaseTest {
                         .email(email)
                         .password(encodedPassword)
                         .build();
-                when(memberPersistencePort.findMemberById(memberId)).thenReturn(member);
+                when(memberPersistencePort.findMemberByEmail(email)).thenReturn(member);
                 when(authenticationPersistencePort.existsAuthenticationByEmail(email)).thenReturn(true);
                 when(authenticationPersistencePort.findAuthenticationByEmail(email))
                         .thenReturn(Authentication.builder().email(email).verified(true).build());
@@ -88,7 +85,7 @@ class UpdatePasswordUseCaseTest {
 
                 // When & Then
                 assertThrows(PasswordInvalidException.class, () ->
-                        updatePasswordUseCase.execute(memberId, "oldPass", "newPass"));
+                        updatePasswordUseCase.execute(email, "oldPass", "newPass"));
             }
         }
 
@@ -109,7 +106,7 @@ class UpdatePasswordUseCaseTest {
                         .email(email)
                         .password(encodedPassword)
                         .build();
-                when(memberPersistencePort.findMemberById(memberId)).thenReturn(member);
+                when(memberPersistencePort.findMemberByEmail(email)).thenReturn(member);
                 when(authenticationPersistencePort.existsAuthenticationByEmail(email)).thenReturn(true);
                 when(authenticationPersistencePort.findAuthenticationByEmail(email))
                         .thenReturn(Authentication.builder().email(email).verified(true).build());
@@ -117,7 +114,7 @@ class UpdatePasswordUseCaseTest {
                 when(passwordEncoder.encode("newPass")).thenReturn(newEncodedPassword);
 
                 // When
-                updatePasswordUseCase.execute(memberId, "oldPass", "newPass");
+                updatePasswordUseCase.execute(email, "oldPass", "newPass");
 
                 // Then
                 verify(memberPersistencePort).updateMemberPassword(memberId, newEncodedPassword);
