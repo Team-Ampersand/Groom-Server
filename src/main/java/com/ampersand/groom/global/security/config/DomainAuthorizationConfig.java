@@ -12,7 +12,7 @@ public class DomainAuthorizationConfig {
                 .requestMatchers("/api/v1/members/{memberId}/password").permitAll()
                 .requestMatchers("/api/v1/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_TEACHER", "ROLE_ADMIN")
                 .requestMatchers("/health").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
         );
     }
 }
