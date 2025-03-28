@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("FindCurrentMemberUseCase 클래스의")
+@DisplayName("현재 인증된 Member 조회 UseCase 클래스의")
 class FindCurrentMemberUseCaseTest {
 
     @Mock
